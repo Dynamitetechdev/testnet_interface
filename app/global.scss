@@ -1,0 +1,441 @@
+@import url('https://fonts.cdnfonts.com/css/br-firma?styles=81215,81219,81209,81211,81213,81217,81207,81205');
+html {
+  scroll-behavior: smooth;
+}
+.brFirma_font{
+  font-family: 'BR Firma', sans-serif;
+}
+.tag {
+  width: 377.88px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 234, 251, 0.1);
+  color: rgba(203, 203, 232, 0.75);
+  font-size: 12.688px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 157.635% */
+
+  .arrow {
+    border-radius: 99px;
+    border: 1px solid rgba(234, 234, 251, 0.1);
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+.inner-tag {
+  border-radius: 999px;
+  border: 1px solid rgba(234, 234, 251, 0.1);
+  // height: 24px;
+  flex-shrink: 0;
+}
+.shadowBackDrop {
+  background: rgba(234, 234, 251, 0.04);
+  box-shadow: 0px -4px 12px 0px rgba(234, 234, 251, 0.1) inset;
+  backdrop-filter: blur(6px);
+}
+
+.hero_text {
+  .big_text {
+    color: #fff;
+    text-align: center;
+    // font-size: 63px;
+    font-style: normal;
+    font-weight: 600;
+    // line-height: 66px;
+    // width: 838px;
+    // height: 144px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    span {
+      background: var(
+        --Stuff,
+        linear-gradient(0.5deg, #bf9137 7.51%, #7ef 74.92%)
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  .des {
+    // width: 707px;
+    color: #e5e5f9;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+  }
+  button {
+    // width: 148px;
+    height: 40px;
+    flex-shrink: 0;
+    color: var(--White, #fff);
+    font-size: 14.5px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    border-radius: 6px;
+    background: #602af8;
+    box-shadow: 0px 4px 10px 4px rgba(2, 3, 28, 0.8),
+      0px 0px 0px 4px rgba(206, 206, 251, 0.16),
+      0px -4px 12px 0px rgba(234, 234, 251, 0.3) inset;
+
+    :hover {
+      box-shadow: none;
+    }
+  }
+}
+.preview {
+  // width: 1036px;
+  // height: 486px;
+  border-radius: 10px;
+  //   background: #1d132b;
+  z-index: 999;
+}
+.preview-shadow {
+  background: linear-gradient(
+    180deg,
+    rgba(13, 2, 28, 0) 9.94%,
+    rgba(13, 2, 28, 0.38) 31.15%,
+    #0d021c 77.93%
+  );
+}
+.ecplise_blur {
+  width: 1121px;
+  height: 50px;
+  border-radius: 1021px;
+  background: linear-gradient(277deg, #bf9137 44.69%, #7ef 87.53%);
+  filter: blur(145px);
+}
+
+.medium_title {
+  // display: flex;
+  // width: 598px;
+  // height: 115px;
+  text-align: center;
+  background: linear-gradient(0deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  // font-size: 43.875px;
+  font-style: normal;
+  font-weight: 600;
+  // line-height: 51px;
+}
+.subtitle_p {
+  color: rgba(203, 203, 232, 0.75);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
+.subtitle_nosize {
+  color: rgba(203, 203, 232, 0.75);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.card {
+  border-radius: 12px;
+  border: 1px solid rgba(206, 206, 251, 0.05);
+  background: rgba(206, 213, 251, 0.03);
+  box-shadow: 0px -12px 40px 0px rgba(206, 206, 251, 0.06) inset;
+  backdrop-filter: blur(8px);
+}
+
+.bg-fallingg {
+  background: url("/PNG/falling-light.png") 150px 0px / cover no-repeat;
+
+  //   background: bisque;
+  height: 330px;
+}
+
+.chart {
+  // width: 880px;
+  // height: 516px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0px -32px 64px 0px rgba(206, 206, 251, 0.08) inset;
+  backdrop-filter: blur(4px);
+  .inner {
+    // width: 762px;
+    // height: 411px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0px -32px 64px 0px rgba(206, 206, 251, 0.08) inset;
+    backdrop-filter: blur(4px);
+  }
+}
+
+.xCenter {
+  left: -50%;
+  right: -50%;
+  transform: (-50%, -50%);
+}
+
+.gradient_text {
+  color: #fff;
+  text-align: left;
+  // font-size: 44px;
+  font-style: normal;
+  font-weight: 600;
+  // line-height: 58px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  span {
+    background: var(
+      --Stuff,
+      linear-gradient(0.5deg, #bf9137 7.51%, #7ef 74.92%)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+.button1 {
+  border-radius: 5px;
+  background: rgba(206, 206, 251, 0.01);
+  box-shadow: 0px -4px 12px 0px rgba(234, 234, 251, 0.1) inset;
+  border-radius: 6px;
+  border: 1px solid rgba(206, 206, 251, 0.2);
+  :hover {
+    box-shadow: none;
+    background: transparent;
+    transition: 0.5s;
+  }
+  color: var(--White, #fff);
+}
+.button1:hover{
+  border-radius: 6px;
+  background: #602af8;
+  transition: 0.2s;
+}
+.button2 {
+  // height: 40px;
+  flex-shrink: 0;
+  color: var(--White, #fff);
+  font-size: 14.5px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  border-radius: 6px;
+  background: #602af8;
+  box-shadow: 0px 4px 10px 4px rgba(2, 3, 28, 0.8),
+    0px 0px 0px 4px rgba(206, 206, 251, 0.16),
+    0px -4px 12px 0px rgba(234, 234, 251, 0.3) inset;
+}
+.button2:hover {
+  box-shadow: none;
+}
+.time_tag {
+  border-radius: 5px;
+  background: rgba(165, 134, 254, 0.11);
+}
+.historical_yields {
+  .avg_inner {
+    // width: 384px;
+    // height: 364px;
+    flex-shrink: 0;
+    border-radius: 10px 0px 0px 0px;
+    border-top: 1px solid rgba(206, 206, 251, 0.08);
+    border-left: 1px solid rgba(206, 206, 251, 0.08);
+    background: rgba(206, 206, 251, 0.05);
+  }
+  button {
+    height: 40px;
+    flex-shrink: 0;
+    color: var(--White, #fff);
+    font-size: 14.5px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    border-radius: 6px;
+    background: #602af8;
+    box-shadow: 0px 4px 10px 4px rgba(2, 3, 28, 0.8),
+      0px 0px 0px 4px rgba(206, 206, 251, 0.16),
+      0px -4px 12px 0px rgba(234, 234, 251, 0.3) inset;
+
+    :hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.faq {
+  .openState {
+    border-radius: 4px;
+    background: rgba(206, 206, 251, 0.03);
+    box-shadow: 0px -2px 54px 9px rgba(206, 206, 251, 0.1) inset;
+  }
+}
+
+.socials {
+
+}
+.each-socials {
+  border-radius: 8px;
+  border: 1px solid rgba(143, 103, 255, 0.12);
+  background: rgba(206, 206, 251, 0.05);
+  box-shadow: 0px -12px 24px 0px rgba(159, 114, 255, 0.2) inset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+//DAPP//////////
+.liquid_staking {
+  border-radius: 8px;
+  background: rgba(206, 206, 251, 0.05);
+  box-shadow: 1px -6px 50.1px 0px rgba(209, 166, 255, 0.19) inset;
+  backdrop-filter: blur(19px);
+}
+
+.dapp {
+  .arrange_icon {
+    width: 32.5px;
+    height: 32.5px;
+    flex-shrink: 0;
+    border-radius: 6.5px;
+    border: 0.813px solid rgba(143, 103, 255, 0.12);
+    background: rgba(206, 206, 251, 0.05);
+
+    // :hover{
+    //     background: transparent;
+    //     box-shadow: none;
+    //     display: none;
+    // }
+  }
+  .active {
+    box-shadow: 0px -9.75px 19.5px 0px rgba(159, 114, 255, 0.2) inset;
+  }
+  .active:hover {
+    background: transparent;
+    box-shadow: none;
+    display: none;
+  }
+  .table_heading {
+    border-radius: 12px;
+    border: 1px solid rgba(206, 206, 251, 0.1);
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.02);
+    background: rgba(206, 206, 251, 0.05);
+  }
+  // .table_pool{
+
+  // }
+  .table_pool{
+
+  }
+  .table_pool:hover{
+    background: rgba(0, 0, 0, 0.05);
+    box-shadow: -10px -16px 60.1px 0px rgba(209, 166, 255, 0.19) inset;
+    backdrop-filter: blur(19px);
+  }
+  .table_pool_container {
+    border-radius: 8px;
+background: rgba(206, 206, 251, 0.05);
+backdrop-filter: blur(19.350000381469727px);
+// :hover{
+//   background: radial-gradient(98.67% 96.43% at 49.73% 3.57%, rgba(0, 0, 0, 0.00) 0%, rgba(211, 117, 255, 0.20) 100%), rgba(206, 206, 251, 0.05);
+//   backdrop-filter: blur(13.258334159851074px);
+// }
+  }
+}
+
+
+// MODAL
+.modal_content{
+  border-radius: 8px;
+border: 1px solid rgba(206, 206, 251, 0.10);
+background: rgba(21, 7, 44, 0.85);
+box-shadow: 0px -28px 100.2px -46px rgba(206, 206, 251, 0.25) inset;
+backdrop-filter: blur(13.600000381469727px);
+
+.currency_container{
+  border-radius: 5px;
+border: 1px solid rgba(206, 206, 251, 0.10);
+background: rgba(206, 206, 251, 0.06);
+}
+.token{
+  border-radius: 5.189px;
+background: rgba(206, 206, 251, 0.07);
+}
+.proceed {
+  flex-shrink: 0;
+  color: var(--White, #fff);
+  font-size: 14.5px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  border-radius: 6px;
+  background: #602af8;
+
+  :hover {
+    box-shadow: none;
+  }
+}
+}
+
+.less_opacity{
+  opacity: 0.5;
+}
+
+//OUR PRODUCTS
+.products{
+
+
+.product_bg{
+  border-radius: 13px;
+background: rgba(206, 206, 251, 0.02);
+box-shadow: 0px -32px 64px 0px rgba(206, 206, 251, 0.05) inset;
+backdrop-filter: blur(8px);
+}
+}
+.product_button{
+  border-radius: 25px;
+border: 1px solid rgba(186, 199, 255, 0.20);
+background: radial-gradient(100.62% 163.34% at 51.27% 0%, rgba(255, 255, 255, 0.00) 0%, rgba(186, 199, 255, 0.12) 100%);
+}
+.circle{
+  border-radius: 99px;
+border: 1px solid rgba(143, 103, 255, 0.12);
+background: rgba(206, 206, 251, 0.05);
+box-shadow: 0px -12px 24px 0px rgba(158, 113, 255, 0.20) inset;
+}
+
+.chart-container {
+  flex: 1;
+}
+
+.tv-lightweight-charts {
+  flex: 1;
+  height: 100%;
+}
+
+
+.skeleton {
+	background-color: #2b1d3a;
+	// The shine that's going to move across the skeleton:
+	background-image:			
+			linear-gradient(
+				90deg, 
+				rgba(#e4d3d3, 0), 
+				rgba(#e4d3d3, 0.5),
+				rgba(#e4d3d3, 0)
+			);
+	background-size: 40px 100%; // width of the shine
+	background-repeat: no-repeat; // No need to repeat the shine effect
+	background-position: left -40px top 0; // Place shine on the left side, with offset on the left based on the width of the shine - see background-size
+	animation: shine 2s ease infinite; // increase animation time to see effect in 'slow-mo'
+}
+
+@keyframes shine {
+	to {
+		// Move shine from left to right, with offset on the right based on the width of the shine - see background-size
+		background-position: right -40px top 0;
+	}
+}
