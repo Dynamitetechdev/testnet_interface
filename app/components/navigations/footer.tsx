@@ -10,15 +10,15 @@ const Footer = () => {
               width={1990}
               height={323}
               alt="right"
-              className="absolute left-0 right-0 top-0 w-[1300px] -z-10" 
+              className="absolute left-0 right-0 top-0 md:w-[1300px] -z-10" 
             />
       <div className="xl:w-[1060px] mx-auto flex max-md:flex-col max-md:gap-10 md:max-lg:px-10 items-center justify-between border-b border-border_pri py-8 pt-16 max-md:pb-16">
-        <div className="">
+        <div className="max-sm:px-5">
           <div className="logo flex items-center mb-4">
             <Image src={BondHiveLogo} width={29} height={29} alt="bondhive" />
             <p className="text-md font-semibold text-white">Bondhive</p>
           </div>
-          <p className="w-[434px] text-sm">
+          <p className="md:w-[434px] text-sm">
             BondHive uses blockchain technology to bring traditional bonds into DeFi, offering stable, predictable returns like fixed deposits with the flexibility and efficiency of decentralized finance.
           </p>
         </div>

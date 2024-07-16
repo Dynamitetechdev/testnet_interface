@@ -392,7 +392,7 @@ const DepositFunds: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
               {
                 notEnoughBal && <div className="mt-3">
                 <p className="text-red-500 cursor-pointer">
-                The Amount you entered is larger than your balance. Try a lower anount
+                The Amount you entered is larger than your balance. Try a lower amount
                 </p>
               </div>
               }

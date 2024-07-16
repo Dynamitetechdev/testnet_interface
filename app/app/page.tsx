@@ -34,6 +34,7 @@ import { GetAPY } from "../dataService/dataServices";
 import Loading from "../components/UI-assets/loading";
 import { Tooltip } from "react-tooltip";
 import { getNetworkDetails } from "@stellar/freighter-api";
+import MobileNav from "../components/UI-assets/mobileNav";
 const MainDapp = () => {
   const {setConnectorWalletAddress, connectorWalletAddress, poolReserve, setPoolReserve,transactionsStatus,setSelectedPool, selectedPool,selectedNetwork} = UseStore()
   const [openState, setOpenState] = useState(false)
@@ -193,35 +194,24 @@ console.log({selectedNetwork})
         return result
       }
 
-  const sortFunc = (type: string) => {
-    if(type === "apy"){
-      setPools((prevPools: any) => {
-        const sortedPools = [...prevPools].sort((a, b) => {
-          if (sortOrder === 'asc') {
-            return parseFloat(a.apy) - parseFloat(b.apy);
-          } else {
-            return parseFloat(b.apy) - parseFloat(a.apy);
-          }
+      const sortFunc = (type: string) => {
+        setPools((prevPools: any) => {
+          const sortedPools = [...prevPools].sort((a, b) => {
+            const valueA = type === "apy" ? parseFloat(a.apy) : parseFloat(a.reserves);
+            const valueB = type === "apy" ? parseFloat(b.apy) : parseFloat(b.reserves);
+      
+            if (sortOrder === 'asc') {
+              return valueA - valueB;
+            } else {
+              return valueB - valueA;
+            }
+          });
+          console.log({ sortedPools });
+          return sortedPools; // Return the sortedPools array directly, not wrapped in an object
         });
-        console.log({sortedPools})
-        return  {sortedPools};
-      });
-      setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
-    } else{
-      setPools((prevPools: any) => {
-        const sortedPools = [...prevPools].sort((a, b) => {
-          if (sortOrder === 'asc') {
-            return parseFloat(a.reserves) - parseFloat(b.reserves);
-          } else {
-            return parseFloat(b.reserves) - parseFloat(a.reserves);
-          }
-        });
-        console.log({sortedPools})
-        return {sortedPools};
-      });
-      setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
-    }
-  };
+        
+        setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
+      };
   const [isTestnet, setIsTestnet] = useState<any>(null)
   useEffect(() => {
     const getNetwork = async () => {
@@ -247,7 +237,7 @@ console.log({selectedNetwork})
       {
         !isTestnet && <div className="card max-w-[1100px] mx-auto px-4 text-lg text-center py-9 mb-6">
         <p className="text-red-500 text-3xl">You are connected to the wrong network.</p>
-        <Link href={"https://mainnet-bondhive.vercel.app/app"} target="_blank"><p className=" text-white underline">Link to use Mainnet</p></Link>
+        <Link href={"https://www.bondhive.xyz/app"} target="_blank"><p className=" text-white underline">Link to use Mainnet</p></Link>
       </div>
       }
       <div className="card max-w-[1100px] mx-auto px-4 text-center py-3 mb-6 flex items-center justify-center gap-3">
@@ -664,34 +654,7 @@ console.log({selectedNetwork})
           </div>
         </div>
       </div>
-      <div className="bg-[#170a28] border-t border-dappHeaderBorder fixed z-[999] w-full bottom-0 py-6 hidden max-lg:block">
-          <ul className="flex justify-center gap-10 pl-3">
-          <Link href={"/app"}>
-            <li className="flex items-center gap-2">
-              <Image
-                src={InvestIcon}
-                width={20}
-                height={20}
-                alt="InvestIcon"
-                className=""
-              />
-              <p className="text-[#937ED6]">Invest</p>
-            </li>
-            </Link>
-            <Link href={"/app/markets"}>
-              <li className="flex items-center gap-2">
-                <Image
-                  src={AnalyticsIcon}
-                  width={20}
-                  height={20}
-                  alt="InvestIcon"
-                  className=""
-                />
-                <p className="text-paraDarkText">Markets</p>
-              </li>
-            </Link>
-          </ul>
-        </div>
+      <MobileNav/>
       <DappFooter />
     </div>
 

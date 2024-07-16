@@ -47,7 +47,7 @@ const Faucet = () => {
   const [fee, setFee] = React.useState(BASE_FEE);
   const [step, setStep] = useState(0);
   const [isGettingFee, setIsGettingFee] = useState<Boolean | null>(null);
-  const contractAddress = "CBAPZJUX3STIFY5OAKLXCEQS6NM3TCVXX2U6G25DS2YNE4RPUEKHCH3K"
+  const contractAddress = "CDJCX67YS7M6EOREWQ7MVVBX2CCQHOSTXF6ZQPADLEVQO26MUNABYLX2"
   const [selectedNetwork] = React.useState(TESTNET_DETAILS);
   const [connectionError, setConnectionError] = useState(null as string | null);
   const [openXDR, setOpenXDR] = useState(false);
@@ -68,7 +68,7 @@ const Faucet = () => {
     const xdr = await mintTestTokens({
       tokenId: contractAddress,
       quantity: ethers
-        .parseUnits('100', selectedPool?.tokenDecimals)
+        .parseUnits('100', 7)
         .toString(),
       destinationPubKey: connectorWalletAddress,
       memo,

@@ -25,7 +25,7 @@ import { EcpliseGlow, MediumChartBg } from "./components/assets/bg";
 import Header from "./components/navigations/header";
 import Link from "next/link";
 import OurProducts from "./components/UI-assets/ourProducts";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, LockClosedIcon, SwatchIcon } from "@heroicons/react/24/outline";
 import {GetAPY} from "./dataService/dataServices";
 import { pool } from "./constants/poolOptions";
 import UseStore from "@/store/UseStore";
@@ -335,7 +335,7 @@ export default function Home() {
               variants={getAnimationVariants(0)}
               initial="out"
               animate={chartIsInView ? "in" : "out"}
-              className="chart mt-36 mx-auto w-7/12 max-md:w-11/12 h-[516px] max-md:h-[441px]"
+              className="chart mt-36 mx-auto w-7/12 max-md:w-11/12 h-[416px] max-md:h-[441px] max-sm:h-[350px]"
             >
               <motion.div
                 variants={getAnimationVariants(0.3)}
@@ -356,7 +356,7 @@ export default function Home() {
                 variants={getAnimationVariants(0.6)}
                 initial="out"
                 animate={chartIsInView ? "in" : "out"}
-                className="subtitle_p xl:text-center absolute bottom-10 px-20 max-md:text-left max-md:px-5 xl:leading-[26px] max-md:text-[16px] leading-[32px]"
+                className="subtitle_p xl:text-center absolute bottom-10 px-20 max-md:text-left max-md:px-5 xl:leading-[26px] max-md:text-[16px]"
               >
                 They can do this by selling futures contracts while
                 simultaneously buying the underlying asset at its current price,
@@ -399,13 +399,7 @@ export default function Home() {
               animate={featuresIsInView ? "in" : "out"}
               className="card w-[363px] h-[146px] py- px-7"
             >
-              <Image
-                src={TransparentIcon}
-                width={23}
-                height={24}
-                alt="right"
-                className="arrow my-3 mt-5"
-              />
+              <LockClosedIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText"/> 
               <h2 className="text-priText mb-1">Secured Arbitrage</h2>
               <p className="text-secText  text-[14px]">
                 Lock in yields with BondHives arbitrage strategy
@@ -435,13 +429,7 @@ export default function Home() {
               animate={featuresIsInView ? "in" : "out"}
               className="card w-[363px] h-[146px] py- px-7"
             >
-              <Image
-                src={TransparentIcon}
-                width={23}
-                height={24}
-                alt="right"
-                className="arrow my-3 mt-5"
-              />
+            <SwatchIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText"/> 
               <h2 className="text-priText mb-1">Systematic Risk Mitigation</h2>
               <p className="text-secText  text-[14px]">
               Third party custodian provides off-exchange settlement
@@ -556,7 +544,7 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="mt-7">
-                      <p className="text-white absolute bottom-5 w-[270px] text-[14px] ml-5">
+                      <p className="text-white absolute bottom-5 w-[270px] text-[14px] ml-2">
                         Displaying the average APY for the BTC futures contract
                         expiring on September
                       </p>
@@ -601,7 +589,7 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="mt-7">
-                      <p className="text-white absolute bottom-5 w-[270px] text-[14px] ml-5">
+                      <p className="text-white absolute bottom-5 w-[270px] text-[14px] ml-2">
                         Displaying the average APY for the ETH futures contract
                         expiring on March
                       </p>

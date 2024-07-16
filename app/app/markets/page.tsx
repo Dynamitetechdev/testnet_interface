@@ -26,6 +26,7 @@ import {
 import Charts from "./chart";
 import { apyData,priceData } from "./priceData";
 import Link from "next/link";
+import MobileNav from "@/app/components/UI-assets/mobileNav";
 
 const MainDapp = () => {
   const ourProducts = [
@@ -427,35 +428,7 @@ const MainDapp = () => {
             </div>
           </div>
         </div>
-
-        <div className="bg-[#170a28] border-t border-dappHeaderBorder fixed z-[999] w-full bottom-0 py-6 hidden max-lg:block">
-          <ul className="flex justify-center gap-10 pl-3">
-          <Link href={"/app"}>
-            <li className="flex items-center gap-2">
-              <Image
-                src={InvestIcon}
-                width={20}
-                height={20}
-                alt="InvestIcon"
-                className=""
-              />
-              <p className="text-[#937ED6]">Invest</p>
-            </li>
-            </Link>
-            <Link href={"/app/markets"}>
-              <li className="flex items-center gap-2">
-                <Image
-                  src={AnalyticsIcon}
-                  width={20}
-                  height={20}
-                  alt="InvestIcon"
-                  className=""
-                />
-                <p className="text-paraDarkText">Markets</p>
-              </li>
-            </Link>
-          </ul>
-        </div>
+        <MobileNav/>
         <DappFooter />
       </div>
     </>
