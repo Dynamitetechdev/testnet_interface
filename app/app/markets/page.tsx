@@ -93,7 +93,11 @@ const MainDapp = () => {
     <>
       <div className="dapp">
         <DAppHeader />
+        
         <div className="lg:w-11/12 md:max-lg:w-11/12 mx-auto md:pt-24 pt-8 md:px-5 max-w-[1500px]">
+        <div className="card max-w-[1500px] mx-auto px-4 text-lg text-center py-9 mb-6">
+        <p className="text-white text-2xl">COMING SOON.</p>
+      </div>
           <div className="flex gap-8 max-md:flex-col">
             <div className="left w-4/12 max-md:w-11/12 md:max-lg:w-6/12 max-md:mx-auto">
               <div
