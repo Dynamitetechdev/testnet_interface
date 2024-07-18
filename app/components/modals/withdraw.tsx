@@ -130,13 +130,13 @@ const WithdrawFunds: React.FC<{ setOpenState: any}> = ({
     );
 
     const result: any = await getQuoteCont(selectedPool.contractAddress, txBuilderBalance, provider, connectorWalletAddress, functName);
-    setWihdrawalEnabled(functName === "deposit_limit" && Number(result) > 0 ? true : false)
+    setWihdrawalEnabled(functName === "available_redemption" && Number(result) > 0 ? true : false)
     // console.log({[functName]: result});
     return result
   }
   // console.log({withdrawalEnabled})
   useEffect(() => {
-    readContract("deposit_limit")
+    readContract("available_redemption")
   })
   useEffect(() => {
     if (signedXdr) {

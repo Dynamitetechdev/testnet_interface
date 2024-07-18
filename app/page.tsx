@@ -335,7 +335,7 @@ export default function Home() {
               variants={getAnimationVariants(0)}
               initial="out"
               animate={chartIsInView ? "in" : "out"}
-              className="chart mt-36 mx-auto w-7/12 max-md:w-11/12 h-[416px] max-md:h-[441px] max-sm:h-[350px]"
+              className="chart mt-36 mx-auto w-7/12 max-md:w-11/12 h-[456px] max-md:h-[441px] max-sm:h-[350px]"
             >
               <motion.div
                 variants={getAnimationVariants(0.3)}
