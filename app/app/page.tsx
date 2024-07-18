@@ -236,8 +236,7 @@ console.log({selectedNetwork})
       <div className="md:w-9/12 md:max-lg:w-11/12 mx-auto md:pt-24 pt-8 px-5">
       {
         !isTestnet && <div className="card max-w-[1100px] mx-auto px-4 text-lg text-center py-9 mb-6">
-        <p className="text-red-500 text-3xl">You are connected to the wrong network.</p>
-        <Link href={"https://www.bondhive.xyz/app"} target="_blank"><p className=" text-white underline">Link to use Mainnet</p></Link>
+        <p className="text-white text-2xl">You are connected to the wrong network. Please switch to testnet.</p>
       </div>
       }
       <div className="card max-w-[1100px] mx-auto px-4 text-center py-3 mb-6 flex items-center justify-center gap-3">
@@ -245,7 +244,7 @@ console.log({selectedNetwork})
         <Link href={"/"}><p className=" text-white underline ">Link to use Mainnet</p></Link>
       </div>
       <div className="card max-w-[1100px] mx-auto px-4 text-center py-3 mb-6 flex items-center justify-center gap-3">
-        <p className="text-white text-1xl">Go to Faucet for 100 USDC (test token)</p>
+        <p className="text-white text-1xl">Get testnet tokens to try our products (get 100 USDC)</p>
         <Link href={"/app/faucet"}><p className=" text-white underline ">Faucet</p></Link>
       </div>
         {/* three cards */}
