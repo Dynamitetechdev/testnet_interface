@@ -500,7 +500,7 @@ console.log({selectedNetwork})
                         setOpenWithdrawState(true)
                         setSelectedPool(pool)
                       }}
-                      disabled={!connectorWalletAddress || Number(shareBalance[index]) <= 0}
+                      disabled={!connectorWalletAddress || Number(pool?.shareBalance) <= 0}
                     >
                       {
                         !shareBalance && connectorWalletAddress ? <div className="flex justify-center">
