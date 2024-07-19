@@ -532,7 +532,7 @@ console.log({selectedNetwork})
                 </div>
               ))}
             </div>
-                      ) : <div className="h-80 flex justify-center items-center gap-2"> <Loading/><p className="text-white">Loading Pools...</p></div>
+                      ) : <div className="h-80 flex justify-center items-center gap-2"> <Loading/><p className="text-white">Connect your wallet to show pools...</p></div>
                     }
             {/*Mobile Pool Strategies */}
             {
@@ -647,7 +647,7 @@ console.log({selectedNetwork})
                 </div>
               ))}
             </div>
-            ) : <div className="h-80 justify-center items-center gap-2 hidden max-lg:flex"> <Loading/><p className="text-white">Loading Pools...</p></div>
+            ) : <div className="h-80 justify-center items-center gap-2 hidden max-lg:flex"> <Loading/><p className="text-white">Connect wallet to show pools...</p></div>
           }
 
           </div>
