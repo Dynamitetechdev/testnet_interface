@@ -7,7 +7,7 @@ import Header from "./components/navigations/header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Bondhive - Maximize Your Investment Returns by Locking in Your Yield with Crypto Bonds",
+  title: "Bondhive (testnet) - Maximize Your Investment Returns by Locking in Your Yield with Crypto Bonds",
   description: "Maximize Your Investment Returns by Locking in Your Yield with Crypto Bonds",
 };
 

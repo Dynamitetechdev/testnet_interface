@@ -9,6 +9,7 @@ const UseStore: any = create((set: any) => ({
     selectedNetwork: TESTNET_DETAILS,
     transactionsStatus: {},
     selectedPool: {},
+    selectedFarmPool: {},
     allPools: pool,
     walletNetwork: null,
     setUserBalance: (balance: string) => set(() => ({userBalance: balance})),
@@ -17,6 +18,7 @@ const UseStore: any = create((set: any) => ({
     setSelectedNetwork: (network: any) => set(() => ({selectedNetwork: network})),
     setTransactionsStatus: (data: any) => set(() => ({transactionsStatus: data})),
     setSelectedPool: (data: any) => set(() => ({selectedPool: data})),
+    setSelectedFarmPool: (data: any) => set(() => ({selectedFarmPool: data})),
     setAllPools: (data: any) => set(() => ({allPools: data})),
     setWalletNetwork: (data: any) => set(() => ({walletNetwork: data}))
 }))

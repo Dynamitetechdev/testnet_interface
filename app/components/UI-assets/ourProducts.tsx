@@ -11,6 +11,7 @@ import {
 } from "../assets";
 import Link from "next/link";
 import { Candles, DynamicPhone, SampleBhusd } from "../assets/bg";
+import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
 const getAnimationVariants = (delay: Number) => {
   const variants: any = {
     in: {
@@ -172,16 +173,11 @@ const OurProducts = () => {
                   </div>
                 </div>
                 <Link href={"/app"} target="_blank">
-                  <button
-                    className={`product_button inline-flex items-center px-10 py-3 gap-2`}
+                <button
+                    className={`product_button inline-flex items-center px-10 py-3 gap-2 button2`}
                   >
-                    <Image
-                      src={ArrowRightUpGrey}
-                      width={17}
-                      height={17}
-                      alt="bondhive"
-                    />
-                    <p className="text-[15px] text-darkPrimText">Launch Dapp</p>
+                    <ArrowUpRightIcon className="w-[17px] h-[17px]"/>
+                    <p className="text-[15px] ">Launch dApp</p>
                   </button>
                 </Link>
               </div>
@@ -256,16 +252,11 @@ const OurProducts = () => {
                   </div>
                 </div>
                 <Link href={"/app"} target="_blank">
-                  <button
-                    className={`product_button inline-flex items-center px-10 py-3 gap-2`}
+                <button
+                    className={`product_button inline-flex items-center px-10 py-3 gap-2 button2`}
                   >
-                    <Image
-                      src={ArrowRightUpGrey}
-                      width={17}
-                      height={17}
-                      alt="bondhive"
-                    />
-                    <p className="text-[15px] text-darkPrimText">Launch Dapp</p>
+                    <ArrowUpRightIcon className="w-[17px] h-[17px]"/>
+                    <p className="text-[15px] ">Launch dApp</p>
                   </button>
                 </Link>
               </div>
@@ -299,16 +290,11 @@ const OurProducts = () => {
                   </div>
                 </div>
                 <Link href={"/app"} target="_blank">
-                  <button
-                    className={`product_button inline-flex items-center px-10 py-3 gap-2`}
+                <button
+                    className={`product_button inline-flex items-center px-10 py-3 gap-2 button2`}
                   >
-                    <Image
-                      src={ArrowRightUpGrey}
-                      width={17}
-                      height={17}
-                      alt="bondhive"
-                    />
-                    <p className="text-[15px] text-darkPrimText">Launch Dapp</p>
+                    <ArrowUpRightIcon className="w-[17px] h-[17px]"/>
+                    <p className="text-[15px] ">Launch dApp</p>
                   </button>
                 </Link>
               </div>
