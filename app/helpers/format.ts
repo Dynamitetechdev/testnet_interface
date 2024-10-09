@@ -1,3 +1,4 @@
+import { xdr } from "@stellar/stellar-sdk";
 import BigNumber from "bignumber.js";
 
 // conversion used to display the base fee
@@ -17,3 +18,7 @@ export const xlmToStroop = (lumens: BigNumber | string): BigNumber => {
   // round to nearest stroop
   return new BigNumber(Math.round(Number(lumens) * 1e7));
 };
+
+export const numberToSCVU32 = (value: number) => {
+  return xdr.ScVal.scvU32(value)
+}

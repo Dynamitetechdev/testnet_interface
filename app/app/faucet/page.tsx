@@ -24,7 +24,13 @@ import {
   UsdcBgLogo,
 } from "@/app/components/assets";
 import Link from "next/link";
-import { BASE_FEE, getServer, getTxBuilder, mintTestTokens, submitTx } from "@/app/helpers/soroban";
+import {
+  BASE_FEE,
+  getServer,
+  getTxBuilder,
+  mintTestTokens,
+  submitTx,
+} from "@/app/helpers/soroban";
 import { TESTNET_DETAILS, signTx } from "@/app/helpers/network";
 import { xlmToStroop } from "@/app/helpers/format";
 import { ERRORS } from "@/app/helpers/error";
@@ -34,7 +40,7 @@ import Loading from "@/app/components/UI-assets/loading";
 const Faucet = () => {
   const [depositAmount, setDepositAmount] = useState("");
   const [memo, setMemo] = useState("");
-  const [withdrawalEnabled, setWihdrawalEnabled] = useState(false)
+  const [withdrawalEnabled, setWihdrawalEnabled] = useState(false);
   const {
     connectorWalletAddress,
     userBalance,
@@ -47,7 +53,9 @@ const Faucet = () => {
   const [fee, setFee] = React.useState(BASE_FEE);
   const [step, setStep] = useState(0);
   const [isGettingFee, setIsGettingFee] = useState<Boolean | null>(null);
-  const contractAddress = "CDJCX67YS7M6EOREWQ7MVVBX2CCQHOSTXF6ZQPADLEVQO26MUNABYLX2"
+  // const contractAddress = "CDJCX67YS7M6EOREWQ7MVVBX2CCQHOSTXF6ZQPADLEVQO26MUNABYLX2"
+  const contractAddress =
+    "CBCJHCJMDD6SLD3K4HEUHNILUQBPXQFZ6XAIWHBS7GPQEHV3YXDOW3UK";
   const [selectedNetwork] = React.useState(TESTNET_DETAILS);
   const [connectionError, setConnectionError] = useState(null as string | null);
   const [openXDR, setOpenXDR] = useState(false);
@@ -67,9 +75,7 @@ const Faucet = () => {
     );
     const xdr = await mintTestTokens({
       tokenId: contractAddress,
-      quantity: ethers
-        .parseUnits('100', 7)
-        .toString(),
+      quantity: ethers.parseUnits("100", 7).toString(),
       destinationPubKey: connectorWalletAddress,
       memo,
       txBuilderAdmin,
@@ -100,7 +106,6 @@ const Faucet = () => {
       setTxResultXDR(result);
       setTransactionsStatus({ deposit: true });
       setIsSubmitting(false);
-      setStep(2);
     } catch (error) {
       setIsSubmitting(false);
       setConnectionError(ERRORS.UNABLE_TO_SUBMIT_TX);
@@ -112,12 +117,12 @@ const Faucet = () => {
     }
   }, [signedXdr]);
   useEffect(() => {
-    if(txResultXDR){
+    if (txResultXDR) {
       setTimeout(() => {
-        setTxResultXDR(null)
+        setTxResultXDR(null);
       }, 3000);
     }
-  }, [txResultXDR])
+  }, [txResultXDR]);
   return (
     <>
       <div className="dapp">
@@ -126,26 +131,25 @@ const Faucet = () => {
           <h1 className="text-[4vw] text-white uppercase">Faucets</h1>
           <p className="text-white">Mint Tokens For Tests.</p>
           <button
-  className="product_button items-center px-20 py-5 my-5"
-  onClick={signWithFreighter}
->
-  <p className="text-[13px] text-darkPrimText uppercase">
-    {isSubmitting ? (
-      <Loading />
-    ) : (
-      <span className="inline-flex gap-2">
-        <span>{txResultXDR ? "Minted 100 USDC" : "Mint"}</span>
-        <Image
-          src={ArrowRightUpGrey}
-          width={17}
-          height={17}
-          alt="bondhive"
-        />
-      </span>
-    )}
-  </p>
-</button>
-
+            className="product_button items-center px-20 py-5 my-5"
+            onClick={signWithFreighter}
+          >
+            <p className="text-[13px] text-darkPrimText uppercase">
+              {isSubmitting ? (
+                <Loading />
+              ) : (
+                <span className="inline-flex gap-2">
+                  <span>{txResultXDR ? "Minted 100 USDC" : "Mint"}</span>
+                  <Image
+                    src={ArrowRightUpGrey}
+                    width={17}
+                    height={17}
+                    alt="bondhive"
+                  />
+                </span>
+              )}
+            </p>
+          </button>
         </div>
         <DappFooter />
       </div>

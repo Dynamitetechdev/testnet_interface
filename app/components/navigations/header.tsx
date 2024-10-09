@@ -5,6 +5,7 @@ import { GridLight, GridLightMobile, LightRay } from "../assets/bg";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,11 +74,12 @@ const Header = () => {
         <div className="flex justify-between items-center gap-5 max-md:gap-2">
           <Link href={"https://bond-hive.gitbook.io/bond-hive/"} target="_blank"> <p className="max-md:hidden">Docs</p></Link> 
           <Link href={"/app"} target="_blank">
-            <button
-              className={` ${style.button} inline-flex items-center px-[16px] py-[5px] gap-3`}
+          <button
+              className={` button2 inline-flex items-center px-[16px] py-[5px] gap-3`}
             >
               <div className="">Launch dApp</div>
-              <Image src={ArrowRight} width={13} height={13} alt="bondhive" />
+              {/* <Image src={ArrowRight} width={13} height={13} alt="bondhive" /> */}
+              <ArrowLongRightIcon className="w-[15px] h-[20px]"/>
             </button>
           </Link>
           <Link href={"https://t.me/+AjBlPFAjjLYyNWNl"} target="_blank">

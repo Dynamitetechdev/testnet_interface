@@ -1,4 +1,4 @@
-import { ChartBarIcon, CurrencyEuroIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, CircleStackIcon, CurrencyEuroIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -20,6 +20,14 @@ export default function MobileNav() {
             <p>Markets</p>
           </li>
           </Link>
+           <Link href={"/app/farm"}>
+          <li className={`flex items-center gap-2 ${pathName === "/app/farm" ? "text-[#937ED6]" : "text-white"}`}>
+
+          <CircleStackIcon className="w-[20px]"/>
+            <p>farm</p>
+          </li>
+          </Link>
+          
         </ul>
       </div>
     );

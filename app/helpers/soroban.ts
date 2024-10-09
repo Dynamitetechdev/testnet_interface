@@ -14,7 +14,7 @@ import {
 } from "@stellar/stellar-sdk";
 import BigNumber from "bignumber.js";
 import { NetworkDetails } from "./network";
-import { stroopToXlm } from "./format";
+import { numberToSCVU32, stroopToXlm } from "./format";
 import { ERRORS } from "./error";
 
 // TODO: once soroban supports estimated fees, we can fetch this
@@ -44,10 +44,14 @@ export const accountToScVal = (account: string) =>
 // Can be used whenever you need an i128 argument for a contract method
 export const numberToI128 = (value: number): xdr.ScVal =>
   nativeToScVal(value, { type: "i128" });
+export const numberToU32 = (value: number): xdr.ScVal =>
+  nativeToScVal(value, { type: "u32" });
 
 // Can be used whenever you need an i128 argument for a contract method
 export const stringToI128 = (value: string): xdr.ScVal =>
   nativeToScVal(value, { type: "i128" });
+export const stringToU32 = (value: string): xdr.ScVal =>
+  nativeToScVal(value, { type: "u32" });
 
 // Given a display value for a token and a number of decimals, return the correspding BigNumber
 export const parseTokenAmount = (value: string, decimals: number) => {
@@ -218,6 +222,7 @@ export const mintTokens = async ({
   memo,
   txBuilderAdmin,
   server,
+  quote
 }: {
   tokenId: string;
   quantity: string;
@@ -225,6 +230,7 @@ export const mintTokens = async ({
   memo: string;
   txBuilderAdmin: TransactionBuilder;
   server: SorobanRpc.Server;
+  quote: string
 }) => {
   const contract = new Contract(tokenId);
 
@@ -235,7 +241,8 @@ export const mintTokens = async ({
           "deposit",
           ...[
             accountToScVal(destinationPubKey), // from
-            stringToI128(quantity), // quantity
+            stringToI128(quantity),// quantity
+            stringToI128(quote) // quantity
           ],
         ),
       )
@@ -249,7 +256,93 @@ export const mintTokens = async ({
     // console.log({preparedTransaction, tx})
     return preparedTransaction.toXDR();
   } catch (err) {
-    console.log("err");
+    console.log({err});
+    return "error";
+  }
+};
+export const depositBondToFarm = async ({
+  tokenId,
+  quantity,
+  destinationPubKey,
+  memo,
+  txBuilderAdmin,
+  server,
+  farmPoolId
+}: {
+  tokenId: string;
+  quantity: string;
+  destinationPubKey: string;
+  memo: string;
+  txBuilderAdmin: TransactionBuilder;
+  server: SorobanRpc.Server;
+  farmPoolId: number
+}) => {
+  const contract = new Contract(tokenId);
+
+  try {
+    const tx = txBuilderAdmin
+      .addOperation(
+        contract.call(
+          "deposit",
+          ...[
+            accountToScVal(destinationPubKey), // from
+            stringToI128(quantity),// quantity
+            numberToSCVU32(farmPoolId)
+          ],
+        ),
+      )
+      .setTimeout(TimeoutInfinite);
+
+      tx.addMemo(Memo.text(`Added ${quantity} Bond`));
+
+    const preparedTransaction = await server.prepareTransaction(tx.build());
+    // console.log({preparedTransaction, tx})
+    return preparedTransaction.toXDR();
+  } catch (err) {
+    // console.log("err");
+    return "error";
+  }
+};
+export const removeBondFromFarm = async ({
+  tokenId,
+  quantity,
+  destinationPubKey,
+  memo,
+  txBuilderAdmin,
+  server,
+  farmPoolId
+}: {
+  tokenId: string;
+  quantity: string;
+  destinationPubKey: string;
+  memo: string;
+  txBuilderAdmin: TransactionBuilder;
+  server: SorobanRpc.Server;
+  farmPoolId: number
+}) => {
+  const contract = new Contract(tokenId);
+
+  try {
+    const tx = txBuilderAdmin
+      .addOperation(
+        contract.call(
+          "withdraw",
+          ...[
+            accountToScVal(destinationPubKey), // from
+            stringToI128(quantity),// quantity
+            numberToSCVU32(farmPoolId)
+          ],
+        ),
+      )
+      .setTimeout(TimeoutInfinite);
+
+      tx.addMemo(Memo.text(`Added ${quantity} Bond`));
+
+    const preparedTransaction = await server.prepareTransaction(tx.build());
+    // console.log({preparedTransaction, tx})
+    return preparedTransaction.toXDR();
+  } catch (err) {
+    // console.log("err");
     return "error";
   }
 };
@@ -309,13 +402,17 @@ export const mintTestTokens = async ({
   server: SorobanRpc.Server;
 }) => {
   const contract = new Contract(tokenId);
+
+
+  console.log({tokenId, quantity, destinationPubKey, contract})
+
   try {
     const tx = txBuilderAdmin
       .addOperation(
         contract.call(
           "mint",
           ...[
-            accountToScVal(destinationPubKey), // from
+            // accountToScVal(destinationPubKey), // from
             accountToScVal(destinationPubKey), // to
             stringToI128(quantity), // quantity
           ],
@@ -374,4 +471,28 @@ export const getEstimatedFee = async (
   const minResourceFeeNum = parseInt(simResponse.minResourceFee, 10) || 0;
   const fee = (classicFeeNum + minResourceFeeNum).toString();
   return fee;
+};
+
+
+export const readContract = async (
+  id: string,
+  txBuilder: TransactionBuilder,
+  connection: any,
+  destinationPubKey: string | null = null,
+  functName: string,
+  args: any[] = []
+) => {
+  const contract = new Contract(id);
+  if (!destinationPubKey) {
+    return false;
+  }
+  const tx = txBuilder
+    .addOperation(contract.call(functName,
+      ...args
+    ))
+    .setTimeout(30)
+    .build();
+
+  const result = await simulateTx<string>(tx, connection);
+  return result;
 };

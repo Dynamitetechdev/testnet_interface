@@ -25,11 +25,15 @@ import { EcpliseGlow, MediumChartBg } from "./components/assets/bg";
 import Header from "./components/navigations/header";
 import Link from "next/link";
 import OurProducts from "./components/UI-assets/ourProducts";
-import { ChevronRightIcon, LockClosedIcon, SwatchIcon } from "@heroicons/react/24/outline";
-import {GetAPY} from "./dataService/dataServices";
+import {
+  ChevronRightIcon,
+  LockClosedIcon,
+  SwatchIcon,
+} from "@heroicons/react/24/outline";
+import { GetAPY } from "./dataService/dataServices";
 import { pool } from "./constants/poolOptions";
 import UseStore from "@/store/UseStore";
- const getAnimationVariants = (delay: Number) => {
+const getAnimationVariants = (delay: Number) => {
   const variants: any = {
     in: {
       y: 0,
@@ -44,7 +48,7 @@ import UseStore from "@/store/UseStore";
   return variants;
 };
 export default function Home() {
-  const {setAllPools,selectedNetwork} = UseStore()
+  const { setAllPools, selectedNetwork } = UseStore();
   const cardHoverVariants = {
     in: {
       y: 0,
@@ -78,7 +82,8 @@ export default function Home() {
   const becomeInView = useInView(becomeRef);
 
   const apyRandom = [
-    12.20, 13.08, 11.96, 12.83, 12.19, 13.07, 11.96, 12.82, 12.84];
+    12.2, 13.08, 11.96, 12.83, 12.19, 13.07, 11.96, 12.82, 12.84,
+  ];
   const getRandomApy = () => {
     let randomFigure = Math.floor(Math.random() * apyRandom.length);
 
@@ -86,18 +91,35 @@ export default function Home() {
   };
 
   const [pools, setPools] = useState(pool);
-  console.log({pools, selectedNetwork})
+  console.log({ pools, selectedNetwork });
+
   useEffect(() => {
-    const interval = setInterval( async () => {
-      const {data} = await GetAPY("https://bondexecution.onrender.com/monitoring/getYields")
-      setPools((prevPools: any) =>
-        prevPools.map((pool: any, index: any) => ({ ...pool, apy: data.data[index].averageYieldPostExecution?.upper }))
+    const fetchData = async () => {
+      const { data } = await GetAPY(
+        "https://bondexecution.onrender.com/monitoring/getYields"
       );
-    }, 10000);
-  
+      setPools((prevPools: any) => {
+        const updatedPools = prevPools.map((pool: any) => {
+          const activePool = data?.data.find((activePool: any) => activePool?.symbolFuture === pool?.symbolFuture)
+
+            return {
+              ...pool,
+              apy: activePool?.averageYieldPostExecution?.upper || "expired"
+            }
+        })
+        return updatedPools.sort((a: any, b: any) => (a.apy === "expired" ? 1 : -1))
+      }
+      );
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Fetch every 10 seconds
+    const interval = setInterval(fetchData, 10000);
+
     return () => clearInterval(interval);
   }, []);
-
   return (
     <>
       {/* <div className="w-full h-10 bg-red-600 md:max-lg:flex hidden max-sm:bg-blue-500 max-sm:flex"></div> */}
@@ -139,7 +161,10 @@ export default function Home() {
               initial="out"
               animate={hreoIsInView ? "in" : "out"}
             >
-              Harness the power of futures spread trading with Bondhive&#39;s Crypto Bonds which offer a straightforward way to invest with fixed terms and guaranteed yields, similar to traditional bank deposits
+              Harness the power of futures spread trading with Bondhive&#39;s
+              Crypto Bonds which offer a straightforward way to invest with
+              fixed terms and guaranteed yields, similar to traditional bank
+              deposits
             </motion.p>
           </div>
           {/* <div className="preview mx-auto  bg-black">
@@ -155,7 +180,7 @@ export default function Home() {
             >
               <div className="preview mx-auto relative md:w-10/12 w-11/12">
                 <div className="table_pool_container_mobile md:grid grid-cols-2 gap-10">
-                  {pools.map((pool:any, index:any) => (
+                  {pools.map((pool: any, index: any) => (
                     <div
                       className="table_pool_container p-5 text-secText bg-dappHeaderBg border-border_pri border rounded-md max-md:mb-5"
                       key={`${index}--pool`}
@@ -182,16 +207,20 @@ export default function Home() {
                         <div className="APY text-blueish flex items-end gap-1 text-sm text-secText">
                           <p>APY</p>
                           <AnimatePresence mode="wait">
-                          <motion.h1
-                            className="text-3xl font-bold text-gold"
-                            key={pool.apy}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.3 }}
-                          >
+                            <motion.h1
+                              className={`text-3xl font-bold  ${
+                                pool.apy == "expired"
+                                  ? "text-red-600 uppercase"
+                                  : "text-gold"
+                              }`}
+                              key={pool.apy}
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              transition={{ duration: 0.3 }}
+                            >
                               {pool.apy}
-                          </motion.h1>
+                            </motion.h1>
                           </AnimatePresence>
 
                           {/* <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px]">
@@ -212,9 +241,7 @@ export default function Home() {
                       <div className="text-[16px] py-4">
                         <div className="maturity flex justify-between">
                           <p className="">Maturity</p>
-                          <p className="text-white ">
-                              {pool.expiration}
-                          </p>
+                          <p className="text-white ">{pool.expiration}</p>
                         </div>
                         <div className="deposit_assets flex justify-between items-center my-4">
                           <p className="">Deposit assets</p>
@@ -228,9 +255,7 @@ export default function Home() {
                                 className="relative"
                               />
                             </div>
-                            <h1 className="text-[16px]">
-                              {pool.tokenSymbol}
-                            </h1>
+                            <h1 className="text-[16px]">{pool.tokenSymbol}</h1>
                           </div>
                         </div>
                         <div className="min_invest flex justify-between items-center">
@@ -247,8 +272,8 @@ export default function Home() {
                         className={`w-full button2 flex items-center justify-center px-9 py-3 gap-1`}
                         // onClick={() => setOpenState(true)}
                       >
-                        <p className="text-sm">Invest Now</p>
-                        <ChevronRightIcon className="w-[13px] h-[13px]"/>
+                        <p className="text-sm">Launch dApp</p>
+                        <ChevronRightIcon className="w-[13px] h-[13px]" />
                       </button>
                     </div>
                   ))}
@@ -261,7 +286,7 @@ export default function Home() {
         </div>
 
         {/* How it works */}
-         <div className=" w-full relative pt-28" id="howitworks">
+        <div className=" w-full relative pt-28" id="howitworks">
           <div className="">
             <Image
               src={Vector1}
@@ -325,11 +350,11 @@ export default function Home() {
               className="subtitle_p md:w-4/12 text-center px-6 md:px-0"
             >
               In markets where the price of futures contracts is higher than the
-              current market price, known as <i>“contango”</i>, investors have the
-              opportunity to profit from this disparity
+              current market price, known as <i>“contango”</i>, investors have
+              the opportunity to profit from this disparity
             </motion.p>
           </div>
-          
+
           <motion.div className="relative" ref={chartRef}>
             <motion.div
               variants={getAnimationVariants(0)}
@@ -368,75 +393,79 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-                  {/* Assured Profit */}
-        <div
-          className="flex flex-col justify-center items-center md:pt-32 mt-28 w-full relative"
-          id="features"
-          ref={featuresRef}
-        >
-          <motion.div className="flex flex-col justify-center items-center gap-2 max-md:px-5">
-            <motion.h1
-              className="medium_title text-center md:text-[44px] text-2xl md:leading-[51px]"
-              variants={getAnimationVariants(0)}
-              initial="out"
-              animate={featuresIsInView ? "in" : "out"}
-            >
-              Features
-            </motion.h1>
-          </motion.div>
+          {/* Assured Profit */}
+          <div
+            className="flex flex-col justify-center items-center md:pt-32 mt-28 w-full relative"
+            id="features"
+            ref={featuresRef}
+          >
+            <motion.div className="flex flex-col justify-center items-center gap-2 max-md:px-5">
+              <motion.h1
+                className="medium_title text-center md:text-[44px] text-2xl md:leading-[51px]"
+                variants={getAnimationVariants(0)}
+                initial="out"
+                animate={featuresIsInView ? "in" : "out"}
+              >
+                Features
+              </motion.h1>
+            </motion.div>
 
-          <motion.div className="flex flex-wrap max-md:flex-col gap-7 md:mt-16 mt-10 assured_profit mx-auto relative px-5">
-            <Image
-              src={"/PNG/falling-light.png"}
-              width={1490}
-              height={330}
-              alt="right"
-              className="absolute left-0 right-0 top-5"
-            />
-            <motion.div
-              variants={getAnimationVariants(0.6)}
-              initial="out"
-              animate={featuresIsInView ? "in" : "out"}
-              className="card w-[363px] h-[146px] py- px-7"
-            >
-              <LockClosedIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText"/> 
-              <h2 className="text-priText mb-1">Secured Arbitrage</h2>
-              <p className="text-secText  text-[14px]">
-                Lock in yields with BondHives arbitrage strategy
-              </p>
-            </motion.div>
-            <motion.div
-              variants={getAnimationVariants(0.9)}
-              initial="out"
-              animate={featuresIsInView ? "in" : "out"}
-              className="card w-[363px] h-[146px] py- px-7"
-            >
+            <motion.div className="flex flex-wrap max-md:flex-col gap-7 md:mt-16 mt-10 assured_profit mx-auto relative px-5">
               <Image
-                src={TransparentIcon}
-                width={23}
-                height={24}
+                src={"/PNG/falling-light.png"}
+                width={1490}
+                height={330}
                 alt="right"
-                className="arrow my-3 mt-5"
+                className="absolute left-0 right-0 top-5"
               />
-              <h2 className="text-priText mb-1">Liquidity in Secondary Market</h2>
-              <p className="text-secText  text-[14px]">
-              Trading and Bond buybacks provide liquidity to bond holders
-              </p>
+              <motion.div
+                variants={getAnimationVariants(0.6)}
+                initial="out"
+                animate={featuresIsInView ? "in" : "out"}
+                className="card w-[363px] h-[146px] py- px-7"
+              >
+                <LockClosedIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText" />
+                <h2 className="text-priText mb-1">Secured Arbitrage</h2>
+                <p className="text-secText  text-[14px]">
+                  Lock in yields with BondHives arbitrage strategy
+                </p>
+              </motion.div>
+              <motion.div
+                variants={getAnimationVariants(0.9)}
+                initial="out"
+                animate={featuresIsInView ? "in" : "out"}
+                className="card w-[363px] h-[146px] py- px-7"
+              >
+                <Image
+                  src={TransparentIcon}
+                  width={23}
+                  height={24}
+                  alt="right"
+                  className="arrow my-3 mt-5"
+                />
+                <h2 className="text-priText mb-1">
+                  Liquidity in Secondary Market
+                </h2>
+                <p className="text-secText  text-[14px]">
+                  Trading and Bond buybacks provide liquidity to bond holders
+                </p>
+              </motion.div>
+              <motion.div
+                variants={getAnimationVariants(1.2)}
+                initial="out"
+                animate={featuresIsInView ? "in" : "out"}
+                className="card w-[363px] h-[146px] py- px-7"
+              >
+                <SwatchIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText" />
+                <h2 className="text-priText mb-1">
+                  Systematic Risk Mitigation
+                </h2>
+                <p className="text-secText  text-[14px]">
+                  Third party custodian provides off-exchange settlement
+                </p>
+              </motion.div>
             </motion.div>
-            <motion.div
-              variants={getAnimationVariants(1.2)}
-              initial="out"
-              animate={featuresIsInView ? "in" : "out"}
-              className="card w-[363px] h-[146px] py- px-7"
-            >
-            <SwatchIcon className="arrow my-3 mt-5 w-[23px] h-[24px] text-priText"/> 
-              <h2 className="text-priText mb-1">Systematic Risk Mitigation</h2>
-              <p className="text-secText  text-[14px]">
-              Third party custodian provides off-exchange settlement
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
+          </div>
           <div className=" pt-52 historical_yields" id="historicalyields">
             <motion.div
               ref={historyYield1}
@@ -524,7 +553,7 @@ export default function Home() {
                       <div className="">
                         <div className="flex">
                           <h2 className="text-[16px] text-darkPrimText mr-3">
-                          BTC Avg Yield
+                            BTC Avg Yield
                           </h2>
                           <div className="time_tag flex items-center gap-1 px-[5px] py-[2px]">
                             {" "}
@@ -535,11 +564,13 @@ export default function Home() {
                               alt="right"
                               className=""
                             />{" "}
-                            <p className="text-[13px] text-[#A586FE]">Sept-28</p>
+                            <p className="text-[13px] text-[#A586FE]">
+                              Sept-28
+                            </p>
                           </div>
                         </div>
                         <h1 className="text-3xl text-white mt-2 brFirma_font">
-                        15.69%
+                          15.69%
                         </h1>
                       </div>
                     </div>
@@ -580,7 +611,9 @@ export default function Home() {
                               alt="right"
                               className=""
                             />{" "}
-                            <p className="text-[13px] text-[#A586FE]">March-24</p>
+                            <p className="text-[13px] text-[#A586FE]">
+                              March-24
+                            </p>
                           </div>
                         </div>
                         <h1 className="text-3xl text-white mt-2 brFirma_font">
@@ -697,12 +730,12 @@ export default function Home() {
               initial="out"
               animate={becomeInView ? "in" : "out"}
             >
-              <Link href={"/contact"}> 
-              <button
-                className={`button1 mt-3 inline-flex items-center px-[20px] py-[10px] gap-3 mr-3`}
-              >
-                <div className="">Reach Out</div>
-              </button>
+              <Link href={"/contact"}>
+                <button
+                  className={`button1 mt-3 inline-flex items-center px-[20px] py-[10px] gap-3 mr-3`}
+                >
+                  <div className="">Reach Out</div>
+                </button>
               </Link>
             </motion.div>
           </div>
@@ -716,7 +749,7 @@ export default function Home() {
   );
 }
 
- const useInView: React.FC<{
+const useInView: React.FC<{
   current: any;
   ref: any;
   options: any;

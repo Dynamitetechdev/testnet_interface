@@ -116,7 +116,6 @@ const DAppHeader = () => {
             // Set selected wallet,  network, and public key
             kit.setWallet(option.id);
             const publicKey = await kit.getPublicKey();
-
             await kit.setNetwork(WalletNetwork.TESTNET);
             setConnectorWalletAddress(publicKey);
                         await retrievePublicKey();
@@ -129,6 +128,12 @@ const DAppHeader = () => {
     }
   };
 
+  const disconnectWallet = async () => {
+    setConnectorWalletAddress(null); 
+    setUserBalance(null);
+    // alert("Wallet disconnected successfully");
+  };
+  
   const server = getServer(selectedNetwork);
 
   const getTokenBalance = async (
@@ -239,7 +244,7 @@ const [networkChange, setNetworkChange] = useState(false)
           width={1152}
           height={380}
           alt="bondhive"
-          className="absolute -top-20 right-10"
+          className="absolute -top-20 right-10 -z-10"
         />
         <Image
           src={LightRay}
@@ -279,6 +284,13 @@ const [networkChange, setNetworkChange] = useState(false)
               <p>Faucet</p>
             </li>
             </Link>
+            <Link href={"/app/farm"}>
+          <li className={`flex items-center gap-2 ${pathName === "/app/farm" ? "text-[#937ED6]" : "text-white"}`}>
+
+          <CircleStackIcon className="w-[20px]"/>
+            <p>Farm</p>
+          </li>
+          </Link>
           </ul>
         </div>
         <div className="flex justify-between items-center md:gap-5 gap-3">
@@ -323,6 +335,17 @@ const [networkChange, setNetworkChange] = useState(false)
             </p>
             {/* <Image src={ArrowRight} width={13} height={13} alt="bondhive" /> */}
           </button>
+          {
+            connectorWalletAddress && (
+              <button
+              className={`disconnectbtn flex items-center px-[16px] max-sm:px-2 py-[5px] max-sm:py-1 max-sm:text-[11px]  h-[40px]`}
+              onClick={disconnectWallet}
+            >
+              Disconnect
+            </button>
+            )
+          }
+
         </div>
       </div>
     </div>
