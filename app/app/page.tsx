@@ -41,7 +41,8 @@ const MainDapp = () => {
   const [openState, setOpenState] = useState(false)
   const [openWithdrawState, setOpenWithdrawState] = useState(false)
   const [shareBalance, setShareBalance] = useState<any>(null)
-  const [loadPool, setLoadPool] = useState(false)
+  const [loadPool, setLoadPool] = useState<boolean | null>(null);
+  const [apys, setApys] = useState<any[]>([]);
   // const [selectedNetwork] = React.useState(TESTNET_DETAILS);
   // const [pools, setPools] = useState<any>(pool ? pool : [])
   const [pools, setPools] = useState(pool);
@@ -125,34 +126,33 @@ const MainDapp = () => {
   }
 
   const fetchData = async () => {
-    // setLoadingApy(true);
     const { data } = await GetAPY(
       "https://bondexecution.onrender.com/monitoring/getYields"
     );
     if (data) {
       setLoadingApy(true);
-      // for testing
-      setPools((prevPools: any) => {
-        const updatedPools = prevPools.map((pool: any) => {
-          const activePool = data?.data.find(
-            (activePool: any) =>
-              activePool?.symbolFuture === pool?.symbolFuture
-          );
-
-          return {
-            ...pool,
-            apy: activePool?.averageYieldPostExecution?.upper || "expired",
-          };
-        });
-        return updatedPools.sort((a: any, b: any) =>
-          a.apy === "expired" ? 1 : -1
+      
+      // Extract APYs and store them in 'apys'
+      const extractedApys = pools.map((pool: any) => {
+        const activePool = data?.data.find(
+          (activePool: any) =>
+            activePool?.symbolFuture === pool?.symbolFuture
         );
+  
+        return {
+          symbolFuture: pool?.symbolFuture,
+          apy: activePool?.averageYieldPostExecution?.upper || "expired",
+          expired: !activePool?.averageYieldPostExecution?.upper,
+          active: !!activePool?.averageYieldPostExecution?.upper,
+        };
       });
+  
+      setApys(extractedApys); // Store the APY values separately
       setLoadingApy(false);
     }
   };
   useEffect(() => {
-
+    fetchData()
     const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -165,6 +165,9 @@ const MainDapp = () => {
 
             // console.log({[`${index}-maturityDate`]: dateFormat(maturityDate)})
             const now = BigInt(Math.floor(Date.now() / 1000))
+            const poolApy = apys.find(
+              (apyEntry: any) => apyEntry?.symbolFuture === pool?.symbolFuture
+            );
             return {
               ...pool,
               reserves,
@@ -173,17 +176,18 @@ const MainDapp = () => {
               expiration: dateFormat(maturityDate),
               position: Number(shareBalance) * 100,
               depositEnabled: BigInt(maturityDate) > now,
-              apy: pool?.apy
+              apy: poolApy?.apy || 0.00,
+              active: poolApy?.active,
+              expired: poolApy?.expired
             }
           }))
           setPools(updatedPools)
-          setLoadPool(true)
         }
       }
   useEffect(() => {
 
       updatedPool()
-  }, [connectorAddr,  transactionsStatus?.deposit, transactionsStatus])
+  }, [connectorAddr,  transactionsStatus?.deposit, transactionsStatus, apys])
 
       //  READ FUNCTION
       const readContIntr = async (
@@ -273,7 +277,38 @@ const MainDapp = () => {
     65, 63, 80,90, 140, 150, 139,170, 140, 180,200
   ];
 
-  console.log({shareBalance})
+  const activePools = pools.filter((pool: any) => pool.active)
+  const expiredPools = pools.filter((pool: any) => pool.expired)
+
+  const tabOptions = [
+    {
+      name: "Active",
+      value: "active",
+      count: true,
+      countValue: activePools.length,
+    },
+    {
+      name: "Expired",
+      value: "expired",
+      count: true,
+      countValue: expiredPools?.length,
+    },
+  ];
+
+  const [selectTabs, setSelectTabs] = useState<any>({
+    active: true,
+  });
+  const handleSelect = (selectedTab: string) => {
+    setSelectTabs((prev: any) => {
+      let updatedTab = { [selectedTab]: true };
+      Object.keys(prev).forEach((key: any) => {
+        if (key != selectedTab) {
+          updatedTab[key] = false;
+        }
+      });
+      return updatedTab;
+    });
+  };
   return (
     <>
     <div className="dapp">
@@ -400,12 +435,35 @@ const MainDapp = () => {
         </div>
         {/* Investment pools */}
         <div className="my-16 max-w-[1100px] mx-auto">
-          <div className="title_arrange flex justify-between items-center">
-            <div className="flex gap-2 items-center">
+          <div className="title_arrange md:flex justify-between items-center">
+            <div className="flex gap-2 items-center max-md:mb-5">
               <h1 className="text-white">Investment pools</h1>
               <p className="text-secText inner-tag shadowBackDrop text-center py-1 px-3 text-[12px]">
                 {pool.length} available
               </p>
+            </div>
+
+            <div className="buttons text-blueish text-sm w-[328px] max-md:w-full border-2 border-border_pri rounded-xl flex">
+              {tabOptions.map((tab, index) => (
+                <button
+                  onClick={() => handleSelect(tab.value)}
+                  className={`py-2 max-md:py-3 w-1/2 flex items-center justify-center gap-2  ${
+                    selectTabs[tab.value] && "shadow_button"
+                  }`}
+                  key={`ttab-${index}`}
+                >
+                  <h2>{tab.name}</h2>
+                  {tab?.count && (
+                    <span
+                      className={`product_button flex justify-center items-center p-[2px] w-6 h-6 gap-2 rounded-full`}
+                    >
+                      <p className="text-sm text-gray-400 uppercase ">
+                        {tab?.countValue}
+                      </p>
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
           </div>
           <div className="table w-full mt-5">
@@ -448,8 +506,23 @@ const MainDapp = () => {
               </div>
             </div>
 
+            {
+                activePools.length <= 0 && (
+                  <div className="farm card1 max-w-[1500px] mx-auto px-4 py-4 mb-6 border-b border-gray-700 flex items-center divide-x divide-gray-600 h-[200px]">
+                  <div className="text-white text-center flex justify-center items-center flex mx-auto gap-3">
+                    <Loading/>
+                      <h2 className="text-white font-semibold text-md">
+                        Loading Pools...
+                      </h2>
+                  </div>
+                </div>
+                )
+              }
+
+{
+               selectTabs['active'] && (
             <div className="table_pool_container max-lg:hidden">
-              {pools.map((pool: any, index: number) => (
+              {activePools.map((pool: any, index: number) => (
                 <div
                   className={`table_pool flex items-start px-4 border-border_pri pb-3 pt-6 ${
                     index !== 0 && "border-t"
@@ -565,11 +638,136 @@ const MainDapp = () => {
                 </div>
               ))}
             </div>
+               )
+              }
+
+{
+               selectTabs['expired'] && (
+            <div className="table_pool_container max-lg:hidden">
+              {expiredPools.map((pool: any, index: number) => (
+                <div
+                  className={`table_pool flex items-start px-4 border-border_pri pb-3 pt-6 ${
+                    index !== 0 && "border-t"
+                  }`}
+                  key={`${index}--pool`}
+                >
+                  <div className="strategy_Names w-4/12 bg-red-60">
+                    <div className="flex items-center mb-3 gap-2">
+                      <Image
+                        src={pool.img}
+                        width={38}
+                        height={38}
+                        alt="right"
+                        className=""
+                      />
+                      <div className="">
+                        <h1 className="text-white text-[16px]">
+                          {pool.name}
+                        </h1>
+                        <p className="text-darkPrimText text-sm mt-2">Minimum <span className="text-blueish">${pool.minimum}</span></p>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="APY text-blueish  w-3/12">
+                  <h1
+                        className={`text-[16px] mb-1 ${
+                          pool?.apy == "expired"
+                            ? "text-red-600 uppercase"
+                            : "text-blueish"
+                        }`}
+                      >
+                        {" "}
+                        {!pool.expiration || loadingApy ? (
+                          <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>
+                        ) : (
+                          pool?.apy
+                        )}
+                      </h1>
+                    {/* <h1 className="text-[16px] mb-1 ">10.90 (testing)</h1> */}
+                    <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px]">
+                      {" "}
+                      <Image
+                        src={ApyArrowIcon}
+                        width={14}
+                        height={14}
+                        alt="right"
+                        className=""
+                      />{" "}
+                      <p className="text-[13px] text-[#A586FE]">
+                        2.1% vs. last month
+                      </p>
+                    </div>
+                  </div>
+                  <div className="Deposit_asset text-blueish w-3/12 flex items-center">
+                    <div className="asset_logo ">
+                      <Image
+                        src={UsdcBgLogo}
+                        width={25}
+                        height={25}
+                        alt="token-img"
+                        className=""
+                      />
+                    </div>
+                    <h1 className="text-[15px] ">{pool.tokenSymbol}</h1>
+                  </div>
+                  <div className="minimum text-blueish w-3/12">
+                    <h1 className="text-[16px] mb-2 ">${formatFigures(pool.reserves,2)}</h1>
+                  </div>
+                  <div className="maturity text-blueish w-3/12">
+                    <h1 className="text-[16px] mb-2 ">{pool.expiration ? pool.expiration : <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>}</h1>
+                  </div>
+                  <div className="flex flex-col gap-4 items-cente w-3/12">
+                  { connectorWalletAddress && Number(pool?.shareBalance) > 0 && 
+                  <button
+                  className={"button1 px-9 py-[7px] gap-1 hover:bg-transparent cursor-pointer"}
+                  onClick={() => {
+                    setOpenWithdrawState(true)
+                    setSelectedPool(pool)
+                  }}
+                  disabled={!connectorWalletAddress || Number(pool?.shareBalance) <= 0}
+                >
+                  {
+                    !pool?.shareBalance && connectorWalletAddress ? <div className="flex justify-center">
+                      <Loading/> 
+                    </div>  :                      <p className="text-sm text-center"> My position</p>
+                  }
+                </button>
+                  }
+
+                    <button
+                      className={` flex items-center w-full py-[7px] gap-1 justify-center ${!connectorWalletAddress || !pool.
+                        depositEnabled ? "hover:bg-transparent button1": "button2" }`}
+                      onClick={() => {
+                        setOpenState(true)
+                        setSelectedPool(pool)
+                      }}
+                      disabled={!connectorWalletAddress || !pool.
+                        depositEnabled}
+                        id={!pool.
+                        depositEnabled ? "depositDisabled" : ''}
+                    >
+                      <p className="text-sm ">{pool?.expiration  && !pool.
+                        depositEnabled ? "Maturity reached" : "Invest"}</p>
+                      <Image
+                        src={chervonRight}
+                        width={13}
+                        height={13}
+                        alt="chervonRight"
+                      />
+                    </button>
+                    </div>
+                </div>
+              ))}
+            </div>
+               )
+              }
                     
             {/*Mobile Pool Strategies */}
-
+            {
+                selectTabs['active'] && (
             <div className="table_pool_container_mobile flex-col gap-4 hidden max-lg:flex">
-              {pool.map((pool: any, index:number) => (
+              {activePools.map((pool: any, index:number) => (
                 <div
                   className="table_pool_container p-5 text-secText"
                   key={`${index}--pool`}
@@ -680,7 +878,124 @@ const MainDapp = () => {
                   </button>
                 </div>
               ))}
-            </div>
+            </div> )
+            }
+            {
+                selectTabs['expired'] && (
+            <div className="table_pool_container_mobile flex-col gap-4 hidden max-lg:flex">
+              {expiredPools.map((pool: any, index:number) => (
+                <div
+                  className="table_pool_container p-5 text-secText"
+                  key={`${index}--pool`}
+                >
+                  <div className="flex border-border_pri border-b pb-3 justify-between">
+                    <div className="flex items-center mb-4 gap-2 ">
+                      <Image
+                        src={pool.img}
+                        width={38}
+                        height={38}
+                        alt="right"
+                        className=""
+                      />
+                      <div className="">
+                        <h1 className="text-white text-[16px]">
+                          {" "}
+                          {pool.name}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="APY text-blueish  ">
+                      <h1 className="text-[16px] mb-1 ">
+                      {loadingApy ? <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div> : pool.apy}
+                        </h1>
+                      <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px]">
+                        {" "}
+                        <Image
+                          src={ApyArrowIcon}
+                          width={14}
+                          height={14}
+                          alt="right"
+                          className=""
+                        />{" "}
+                        <p className="text-[12px] text-[#A586FE]">
+                          2.1% vs. last month
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-[16px] py-4">
+                    <div className="maturity flex justify-between">
+                      <p className="">Maturity </p>
+                      <p className="">
+                        <span className="text-blueish mr-2 text-right">
+                          {pool?.expiration}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="deposit_assets flex justify-between items-center my-4">
+                      <p className="">Deposit assets </p>
+                      <div className="Deposit_asset text-blueish  flex flex items-center gap-1">
+                        <div className="asset_logo ">
+                          <Image
+                            src={UsdcBgLogo}
+                            width={25}
+                            height={25}
+                            alt="token-img"
+                            className="relative z-9"
+                          />
+                        </div>
+                        <h1 className="text-[16px]">
+                        {pool.tokenSymbol}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="min_invest flex justify-between items-center">
+                      <p className="">Minimum Inv.</p>
+                      <p className=" text-blueish">
+                        ${pool?.minimum}
+                      </p>
+                    </div>
+                  </div>
+                  {
+                    connectorWalletAddress && Number(pool?.shareBalance) > 0 && <button
+                    className={`w-full button1 flex items-center justify-center px-9 py-3 gap-1 hover:bg-transparent `}
+                    onClick={() => {
+                      setOpenWithdrawState(true)
+                      setSelectedPool(pool)
+                    }}
+                    disabled={!connectorWalletAddress || Number(selectedPool.shareBalance) <= 0}
+                  >
+                                          {
+                        !shareBalance && connectorWalletAddress ? <div className="flex justify-center">
+                          <Loading/>
+                        </div>  :  <div className="flex items-center gap-1">
+                        <p className="text-sm text-center"> My position</p>
+                        <ChevronRightIcon className="w-[13px] h-[20px] "/>
+                          </div>
+                      }
+
+                  </button>
+                  }
+                  
+                  <button
+                    className={`w-full mt-3 flex items-center justify-center px-9 py-3 gap-1 ${!connectorWalletAddress || !pool.
+                        depositEnabled ? "hover:bg-transparent button1": "button2" }`}
+                    onClick={() => {
+                      setOpenState(true)
+                      setSelectedPool(pool)
+                    }}
+                    disabled={!connectorWalletAddress || !pool.
+                      depositEnabled}
+                      id={!pool.
+                      depositEnabled? "depositDisabled" : ''}
+                  >
+                    <p className="text-sm">Invest Now</p>
+                    <ChevronRightIcon className="w-[13px] h-[13px] h-[20px] pt-1"/>
+                  </button>
+                </div>
+              ))}
+            </div> )
+            }
 
           </div>
         </div>

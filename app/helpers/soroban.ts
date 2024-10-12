@@ -412,7 +412,7 @@ export const mintTestTokens = async ({
         contract.call(
           "mint",
           ...[
-            // accountToScVal(destinationPubKey), // from
+            accountToScVal(destinationPubKey), // from
             accountToScVal(destinationPubKey), // to
             stringToI128(quantity), // quantity
           ],
