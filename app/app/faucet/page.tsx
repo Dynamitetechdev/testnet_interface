@@ -50,12 +50,12 @@ const Faucet = () => {
   } = UseStore();
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [fee, setFee] = React.useState(BASE_FEE);
+  const [fee, setFee] = React.useState('1');
   const [step, setStep] = useState(0);
   const [isGettingFee, setIsGettingFee] = useState<Boolean | null>(null);
   // const contractAddress = "CDJCX67YS7M6EOREWQ7MVVBX2CCQHOSTXF6ZQPADLEVQO26MUNABYLX2"
   const contractAddress =
-    "CBCJHCJMDD6SLD3K4HEUHNILUQBPXQFZ6XAIWHBS7GPQEHV3YXDOW3UK";
+    "CADAHE4LOYB76PEJ7YCYSE3NH6JBRLKHINU4HLKMCH4ML7C4YP3OHDXO";
   const [selectedNetwork] = React.useState(TESTNET_DETAILS);
   const [connectionError, setConnectionError] = useState(null as string | null);
   const [openXDR, setOpenXDR] = useState(false);
@@ -95,7 +95,7 @@ const Faucet = () => {
   //Finally submit Deposit transaction
   const submit = async () => {
     setIsSubmitting(true);
-
+    
     try {
       const result = await submitTx(
         signedXdr,
