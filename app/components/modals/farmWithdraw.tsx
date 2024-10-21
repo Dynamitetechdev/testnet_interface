@@ -383,7 +383,13 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                   />
                 </div>
               </div>
-              <SpinningLoading/>
+              <Image
+                            src={DepositSuccess}
+                            width={108}
+                            height={108}
+                            alt="right"
+                            className="mx-auto"
+                          />
               <h1 className="text-2xl px-16">
                 Your transaction was successful
               </h1>

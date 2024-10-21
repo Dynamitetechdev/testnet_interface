@@ -131,23 +131,14 @@ const MainDapp = () => {
     );
     if (data) {
       setLoadingApy(true);
-      
-      // Extract APYs and store them in 'apys'
-      const extractedApys = pools.map((pool: any) => {
-        const activePool = data?.data.find(
-          (activePool: any) =>
-            activePool?.symbolFuture === pool?.symbolFuture
-        );
   
+      const extractedApys = data?.data.map((poolApy: any) => {
         return {
-          symbolFuture: pool?.symbolFuture,
-          apy: activePool?.averageYieldPostExecution?.upper || "expired",
-          expired: !activePool?.averageYieldPostExecution?.upper,
-          active: !!activePool?.averageYieldPostExecution?.upper,
+          apy: poolApy?.averageYieldPostExecution?.upper || "expired",
         };
       });
   
-      setApys(extractedApys); // Store the APY values separately
+      setApys(extractedApys);
       setLoadingApy(false);
     }
   };
@@ -165,9 +156,9 @@ const MainDapp = () => {
 
             // console.log({[`${index}-maturityDate`]: dateFormat(maturityDate)})
             const now = BigInt(Math.floor(Date.now() / 1000))
-            const poolApy = apys.find(
-              (apyEntry: any) => apyEntry?.symbolFuture === pool?.symbolFuture
-            );
+            const poolApy = apys.find((apyEntry: any, i: number) => i === index);
+          
+            const isExpired = BigInt(maturityDate) <= now;
             return {
               ...pool,
               reserves,
@@ -177,8 +168,8 @@ const MainDapp = () => {
               position: Number(shareBalance) * 100,
               depositEnabled: BigInt(maturityDate) > now,
               apy: poolApy?.apy || 0.00,
-              active: poolApy?.active,
-              expired: poolApy?.expired
+              active: !isExpired,
+              expired: isExpired
             }
           }))
           setPools(updatedPools)

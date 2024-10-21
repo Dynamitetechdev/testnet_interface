@@ -237,80 +237,92 @@ const FarmPage = () => {
       if (farms) {
         const updatedFarm = await Promise.all(
           farms.map(async (farmPool: any, index: number) => {
-            // const reserves = await getPoolReserve(index)
-            const shareBalance =
-              connectorWalletAddress && (await getShareBalance(index));
-            const maturityDate: string = await readContractFnCall(
-              "get_maturity_date",
-              [],
-              farms[index].contractAddress
-            );
-            const rewardAddresses: string[] = await readContractFnCall(
-              "get_reward_token_addresses",
-              [],
-              farms[index].contractAddress
-            );
-            const getUserInfo: string[] = await readContractFnCall(
-              "get_user_info",
-              [accountToScVal(connectorWalletAddress), numberToSCVU32(0)],
-              farms[index].contractAddress
-            );
-
-            // console.log({ [`FARM POOL USER INFO -> ${index}`]: getUserInfo });
-            console.log({
-              [`Farm timestamp - ${index}`]: [
-                maturityDate,
-                farms[index].contractAddress,
-              ],
-            });
-            // Fetch the symbol for each reward address
-            const rewardTokens = await Promise.all(
-              rewardAddresses?.map(
-                async (address: string, addrIndex: number) => {
-                  const symbol = await readContractFnCall(
-                    "symbol",
-                    [],
-                    address
-                  );
-                  const balance = await readContractFnCall(
-                    "balance",
-                    [accountToScVal(connectorWalletAddress)],
-                    address
-                  );
-                  return { address, balance, symbol };
-                }
-              )
-            );
-
-            const now = BigInt(Math.floor(Date.now() / 1000));
-            const farmInfo = await readContractFnCall(
-              "get_pool_info",
-              [numberToSCVU32(0)],
-              farms[index].contractAddress
-            );
-            return {
-              ...farmPool,
-              farmInfo,
-              rewardTokens,
-              getUserInfo,
-              // reserves,
-              bondBalance: shareBalance,
-              maturityTimeStamp: maturityDate,
-              expiration: dateFormat(maturityDate),
-              // position: Number(shareBalance) * 100,
-              farmEnabled: BigInt(maturityDate) > now,
-            };
+            try {
+              // const reserves = await getPoolReserve(index)
+              const shareBalance =
+                connectorWalletAddress && (await getShareBalance(index));
+              const maturityDate: string = await readContractFnCall(
+                "get_maturity_date",
+                [],
+                farms[index].contractAddress
+              );
+              const rewardAddresses: string[] = await readContractFnCall(
+                "get_reward_token_addresses",
+                [],
+                farms[index].contractAddress
+              );
+  
+              let getUserInfo: string[] = [];
+              try {
+                getUserInfo = await readContractFnCall(
+                  "get_user_info",
+                  [accountToScVal(connectorWalletAddress), numberToSCVU32(0)],
+                  farms[index].contractAddress
+                );
+              } catch (error) {
+                console.warn(`Skipping pool ${index} due to missing user info.`);
+                // Optionally log the error or handle specific cases here
+              }
+  
+              console.log({
+                [`Farm timestamp - ${index}`]: [
+                  maturityDate,
+                  farms[index].contractAddress,
+                ],
+              });
+  
+              // Fetch the symbol for each reward address
+              const rewardTokens = await Promise.all(
+                rewardAddresses?.map(
+                  async (address: string, addrIndex: number) => {
+                    const symbol = await readContractFnCall(
+                      "symbol",
+                      [],
+                      address
+                    );
+                    const balance = await readContractFnCall(
+                      "balance",
+                      [accountToScVal(connectorWalletAddress)],
+                      address
+                    );
+                    return { address, balance, symbol };
+                  }
+                )
+              );
+  
+              const now = BigInt(Math.floor(Date.now() / 1000));
+              const farmInfo = await readContractFnCall(
+                "get_pool_info",
+                [numberToSCVU32(0)],
+                farms[index].contractAddress
+              );
+  
+              return {
+                ...farmPool,
+                farmInfo,
+                rewardTokens,
+                getUserInfo, // This will be empty if an error occurred
+                bondBalance: shareBalance,
+                maturityTimeStamp: maturityDate,
+                expiration: dateFormat(maturityDate),
+                farmEnabled: BigInt(maturityDate) > now,
+              };
+            } catch (error) {
+              console.error(`Error processing pool ${index}:`, error);
+              // Return the farmPool unmodified if there's an error
+              return farmPool;
+            }
           })
         );
         setAllFarms(updatedFarm);
-        // setLoadPool(true)
       }
     };
-
+  
     if (connectorWalletAddress) {
       updatedFarms();
     }
   }, [connectorWalletAddress, transactionsStatus?.deposit, transactionsStatus]);
+  
 
   const handleFarmDeposit = (farm: any) => {
     setOpenFarmModal(true);
