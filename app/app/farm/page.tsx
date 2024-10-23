@@ -104,92 +104,6 @@ const FarmPage = () => {
     console.log({ [functName]: result });
     return result;
   };
-  // console.log({withdrawalEnabled})
-  useEffect(() => {
-    if (connectorWalletAddress) {
-      // readContractFnCall("get_pool_info", [numberToSCVU32(0)]);
-      // readContractFnCall("get_user_info", [accountToScVal(connectorWalletAddress) , numberToSCVU32(0)], '');
-      // readContractFnCall("get_global_allocated_rewards");
-    }
-  });
-
-  // const signWithFreighter = async () => {
-  //   setIsSubmitting(true);
-
-  //   const txBuilderAdmin = await getTxBuilder(
-  //     connectorWalletAddress,
-  //     xlmToStroop(fee).toString(),
-  //     provider,
-  //     selectedNetwork.networkPassphrase
-  //   );
-  //   const xdr = await mintTokens({
-  //     tokenId: contractAddress,
-  //     quantity: ethers.parseUnits(depositAmount, selectedPool?.tokenDecimals).toString(),
-  //     destinationPubKey: connectorWalletAddress,
-  //     memo,
-  //     txBuilderAdmin,
-  //     server: provider,
-  //   });
-
-  //   try {
-  //     // Signs XDR representing the "mint" transaction
-  //     const signedTx = await signTx(xdr, connectorWalletAddress, kit);
-  //     setIsSubmitting(false);
-  //     setSignedXdr(signedTx);
-  //   } catch (e) {
-  //     setIsSubmitting(false);
-  //     setConnectionError(ERRORS.UNABLE_TO_SIGN_TX);
-  //   }
-  // };
-
-  //Finally submit Deposit transaction
-  // const submit = async () => {
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const result = await submitTx(
-  //       signedXdr,
-  //       selectedNetwork.networkPassphrase,
-  //       provider
-  //     );
-
-  //     setTxResultXDR(result);
-  //     setTransactionsStatus({deposit: true})
-  //     setIsSubmitting(false);
-  //     setStep(2)
-  //   } catch (error) {
-  //     console.log(error);
-  //     setIsSubmitting(false);
-  //     setConnectionError(ERRORS.UNABLE_TO_SUBMIT_TX);
-  //   }
-  // };
-
-  //   useEffect(() => {
-  //     const updatedPool = async () => {
-  //       if(pool){
-  //         const updatedPools = await Promise.all(pools.map(async (pool: any, index: number) => {
-  //           const reserves = await getPoolReserve(index)
-  //           const shareBalance = connectorWalletAddress && await getShareBalance(index)
-  //           const maturityDate:string = await readContract("maturity", index)
-
-  //           // console.log({[`${index}-maturityDate`]: dateFormat(maturityDate)})
-  //           const now = BigInt(Math.floor(Date.now() / 1000))
-  //           return {
-  //             ...pool,
-  //             reserves,
-  //             shareBalance,
-  //             maturityTimeStamp: maturityDate,
-  //             expiration: dateFormat(maturityDate),
-  //             position: Number(shareBalance) * 100,
-  //             depositEnabled: BigInt(maturityDate) > now
-  //           }
-  //         }))
-  //         setPools(updatedPools)
-  //         setLoadPool(true)
-  //       }
-  //     }
-  //     updatedPool()
-  // }, [connectorWalletAddress,  transactionsStatus?.deposit, transactionsStatus])
   const getShareCont = async (
     id: string,
     txBuilder: TransactionBuilder,
@@ -296,12 +210,12 @@ const FarmPage = () => {
                 [numberToSCVU32(0)],
                 farms[index].contractAddress
               );
-  
+
               return {
                 ...farmPool,
                 farmInfo,
                 rewardTokens,
-                getUserInfo, // This will be empty if an error occurred
+                getUserInfo,
                 bondBalance: shareBalance,
                 maturityTimeStamp: maturityDate,
                 expiration: dateFormat(maturityDate),
@@ -381,24 +295,9 @@ const FarmPage = () => {
           7
         )
       ),
-      2
+      6
     )
   }
-  // const handleGetInfo = async () => {
-  //   try {
-  //     const getUserInfo: string[] = await readContractFnCall(
-  //       "get_user_info",
-  //       [accountToScVal(connectorWalletAddress), numberToSCVU32(0)],
-  //       "CCLQZHAB3JMGOVB54JSWMLG6JLGJZE4LIHCYSJGMODJYUIUJBR4O2SHM"
-  //     );
-  //     console.log({ ETHDEC: getUserInfo });
-  //     return getUserInfo;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // handleGetInfo();
   return (
     <>
       <div className="dapp h-screen">
@@ -473,7 +372,9 @@ const FarmPage = () => {
                               </span>
                             </p>
                           </div>
+                          <Link href={"/app"} target="_blank">
                           <h2 className="text-blueish text-sm ">Get More</h2>
+                          </Link>
                         </div>
                       </div>
                     ) : (
@@ -501,16 +402,16 @@ const FarmPage = () => {
 
                   <div className="get_LP_tokens flex items-center gap-3 w-1/2 max-md:w-full px-5 py-3 justify-between max-md:my-7 max-md:pt-7 ">
                     <div className="rewards text-gray-400 text-md">
-                      <h2 className="text-md mb-2 max-sm:text-sm">
+                      {/* <h2 className="text-md mb-2 max-sm:text-sm">
                         Rewards :bhUSD
-                      </h2>
+                      </h2> */}
                       <p className="text-md max-sm:text-sm mb-2 ">Farm APR</p>
                       <p className="text-md max-sm:text-sm">Maturity</p>
                     </div>
 
                     <div className="flex flex-wrap items-center justify-between gap-10 ">
                       <div className="APY text-blueish  w-5/12 brFirma_font">
-                        <h1 className="text-md">12.65%</h1>
+                        {/* <h1 className="text-md">12.65%</h1> */}
                         <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px] my-3">
                           <Image
                             src={ApyArrowIcon}
@@ -614,7 +515,7 @@ const FarmPage = () => {
                                 BONDS
                               </span>
                             </p>
-                            <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px] my-1">
+                            {/* <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px] my-1">
                               <Image
                                 src={ApyArrowIcon}
                                 width={14}
@@ -625,7 +526,7 @@ const FarmPage = () => {
                               <p className="text-[13px]  text-[#A586FE]">
                                 2.1% vs. last month
                               </p>
-                            </div>
+                            </div> */}
                           </div>
                           <motion.button
                             className="farmToggleBtn w-8 h-8 text-[12px] max-md:hidden"
@@ -700,9 +601,8 @@ const FarmPage = () => {
                                     7
                                   )
                                 ),
-                                2
+                                6
                               )}{" "}
-                              USDT
                             </p>
                           </div>
                           <div className="usdtProvided flex justify-between text-gray-400 text-md ">
@@ -717,9 +617,8 @@ const FarmPage = () => {
                                     7
                                   )
                                 ),
-                                2
+                                6
                               )}{" "}
-                              USDT
                             </p>
                           </div>
 
@@ -730,7 +629,6 @@ const FarmPage = () => {
                             </h2>
                             <p className="text-md max-sm:text-sm mb-2 ">
                               {sumAccruedRewards(farm)}
-                              USDT
                             </p>
                           </div>
                         </div>
