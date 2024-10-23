@@ -210,7 +210,7 @@ const FarmPage = () => {
                 [numberToSCVU32(0)],
                 farms[index].contractAddress
               );
-
+              console.log({[`farm-pool-${index}`]: getUserInfo})
               return {
                 ...farmPool,
                 farmInfo,
@@ -295,7 +295,7 @@ const FarmPage = () => {
           7
         )
       ),
-      6
+      7
     )
   }
   return (
@@ -601,7 +601,7 @@ const FarmPage = () => {
                                     7
                                   )
                                 ),
-                                6
+                                7
                               )}{" "}
                             </p>
                           </div>
@@ -617,7 +617,7 @@ const FarmPage = () => {
                                     7
                                   )
                                 ),
-                                6
+                                7
                               )}{" "}
                             </p>
                           </div>

@@ -30,6 +30,7 @@ import { ERRORS } from "@/app/helpers/error";
 import { Contract, TransactionBuilder } from "@stellar/stellar-sdk";
 import { ActivateQuote } from "@/app/dataService/dataServices";
 import SpinningLoading from "../UI-assets/SpinningLoading";
+import Link from "next/link";
 const FarmDeposit: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
   const [depositAmount, setDepositAmount] = useState("");
   const [memo, setMemo] = useState("");
@@ -143,6 +144,10 @@ const FarmDeposit: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     setStep(1);
     // }
   };
+
+  // const getFarmAPR = () => {
+    
+  // }
 console.log()
   useEffect(() => {
     if(Number(depositAmount) > Number(bondBalance)){
@@ -163,7 +168,7 @@ console.log()
               <div className="header flex justify-between items-start">
                 <div className="mb-6">
                   <h1 className="text-lg">{selectedFarmPool?.name} - Farm LP tokens</h1>
-                  <p className="text_grey text-sm">BOND/USDT</p>
+                  <p className="text_grey text-sm">BOND</p>
                 </div>
                 <div
                   className="cursor-pointer"
@@ -211,10 +216,11 @@ console.log()
                       max
                     </span>
                   </div>
-
+                  <Link href={"/app"} target="_blank">
                   <h2 className="text-md max-sm:text-sm cursor-pointer text-blueish">
                     Get More
                   </h2>
+                  </Link>
                 </div>
 
                 <div className="pt-4 mt-6">
@@ -226,12 +232,8 @@ console.log()
                 </div>
                 <div className="border-t border-gray-500 pt-4 mt-6">
                   <div className=" flex items-center justify-between mb-1">
-                    <p className="text_grey text-md max-sm:text-sm">Emmission rate</p>
+                    <p className="text_grey text-md max-sm:text-sm">Farm APR</p>
                     <p className="text-gold text-md max-sm:text-sm">36.99%</p>
-                  </div>
-                  <div className=" flex items-center justify-between mb-1 mb-4">
-                    <p className="text_grey text-md max-sm:text-sm">Fee</p>
-                    <p className="text-white text-md max-sm:text-sm">0.14 - 0.8 BOND</p>
                   </div>
                 </div>
               </div>

@@ -264,7 +264,7 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                             7
                           )
                         ),
-                        2
+                        7
                       )}{" "}
                       Bonds
                     </p>
@@ -283,17 +283,9 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                             7
                           )
                         ),
-                        2
+                        7
                       )}{" "}
                       Bonds
-                    </p>
-                  </div>
-                </div>
-                <div className="border-t border-gray-500 pt-4 mt-6">
-                  <div className=" flex items-center justify-between mb-1 mb-4">
-                    <p className="text_grey text-md max-sm:text-sm">Fee</p>
-                    <p className="text-white text-md max-sm:text-sm">
-                      0.14 - 0.8 BOND
                     </p>
                   </div>
                 </div>
