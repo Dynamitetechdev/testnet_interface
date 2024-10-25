@@ -210,7 +210,10 @@ const FarmPage = () => {
                 [numberToSCVU32(0)],
                 farms[index].contractAddress
               );
-              console.log({[`farm-pool-${index}`]: getUserInfo})
+
+              // const farmAPR = ((7 * 1 * 60*60*24*365)/10^(Number(farmInfo?.reward_ratio1)+ Number(farmInfo?.reward_ratio2)))/100
+              // console.log({[`farm-pool-${index}`]: farmInfo, farmAPR})
+
               return {
                 ...farmPool,
                 farmInfo,
