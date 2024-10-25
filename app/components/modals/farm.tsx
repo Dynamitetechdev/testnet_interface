@@ -233,7 +233,7 @@ console.log()
                 <div className="border-t border-gray-500 pt-4 mt-6">
                   <div className=" flex items-center justify-between mb-1">
                     <p className="text_grey text-md max-sm:text-sm">Farm APR</p>
-                    <p className="text-gold text-md max-sm:text-sm">36.99%</p>
+                    <p className="text-gold text-md max-sm:text-sm">{selectedFarmPool?.farmAPR}%</p>
                   </div>
                 </div>
               </div>

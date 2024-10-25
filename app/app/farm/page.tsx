@@ -210,9 +210,17 @@ const FarmPage = () => {
                 [numberToSCVU32(0)],
                 farms[index].contractAddress
               );
+              
+              const priceOfUSDT = 1
 
-              // const farmAPR = ((7 * 1 * 60*60*24*365)/10^(Number(farmInfo?.reward_ratio1)+ Number(farmInfo?.reward_ratio2)))/100
-              // console.log({[`farm-pool-${index}`]: farmInfo, farmAPR})
+              const decimals = 7
+
+              const rewardRatioSum = Number(farmInfo?.reward_ratio1) + Number(farmInfo?.reward_ratio2)
+
+              const farmAPR = ((rewardRatioSum * priceOfUSDT * 60*60*24*365)/10**(decimals))
+
+
+              // console.log({[`farm-pool-${index}`]: farmInfo, farmAPR: farmAPR.toPrecision(7), rewardRatioSum})
 
               return {
                 ...farmPool,
@@ -223,6 +231,7 @@ const FarmPage = () => {
                 maturityTimeStamp: maturityDate,
                 expiration: dateFormat(maturityDate),
                 farmEnabled: BigInt(maturityDate) > now,
+                farmAPR: farmAPR.toFixed(2)
               };
             } catch (error) {
               console.error(`Error processing pool ${index}:`, error);
@@ -414,8 +423,9 @@ const FarmPage = () => {
 
                     <div className="flex flex-wrap items-center justify-between gap-10 ">
                       <div className="APY text-blueish  w-5/12 brFirma_font">
-                        {/* <h1 className="text-md">12.65%</h1> */}
-                        <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px] my-3">
+                      {
+                        farm?.farmAPR ? (
+                          <div className="time_tag flex items-center justify-center gap-1 py-[3px] px-[5px] w-[150px] my-3">
                           <Image
                             src={ApyArrowIcon}
                             width={14}
@@ -424,14 +434,18 @@ const FarmPage = () => {
                             className=""
                           />{" "}
                           <p className="text-[13px]  text-[#A586FE]">
-                            2.1% vs. last month
+                          {farm?.farmAPR}%
                           </p>
                         </div>
-                        <h1 className="text-md">
+                        ): (
+                          <div className="w-[150px] mb-2 skeleton py-3 animate-puls shadow-md"></div>
+                        )
+                      }
+                        <h1 className="text-md w-[150px] text-center  ">
                           {farm.expiration ? (
                             farm.expiration
                           ) : (
-                            <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>
+                            <div className="w-[150px] skeleton py-3 animate-puls shadow-md"></div>
                           )}
                         </h1>
                       </div>
