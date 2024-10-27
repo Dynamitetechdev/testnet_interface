@@ -162,22 +162,6 @@ const RewardsWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     }
   }, [depositAmount, bondBalance]);
 
-  const sumAccruedRewards = (farm: any) => {
-    const accrued_rewards1 = farm?.getUserInfo.accrued_rewards1
-    const accrued_rewards2 = farm?.getUserInfo.accrued_rewards2
-
-    const sumRewards = accrued_rewards1 + accrued_rewards2
-
-    return floatFigure(
-      Number(
-        ethers.formatUnits(
-          sumRewards,
-          7
-        )
-      ),
-      2
-    )
-  }
   return (
     <>
       <div
@@ -269,7 +253,7 @@ const RewardsWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                     </p>
                     <p className="text-3xl max-sm:text-sm mt-2 ">
                     
-                    <span className="brFirma_font text-gold font-semibold">{sumAccruedRewards(selectedFarmPool)} </span> <span className="text-sm">USDT</span>
+                    <span className="brFirma_font text-gold font-semibold">{selectedFarmPool?.accruedRewardTotal} </span> <span className="text-sm">USDT</span>
                     </p>
                   </div>
                 </div>
@@ -309,6 +293,9 @@ const RewardsWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
               <h1 className="text-lg px-16 mb-7">
                 Confirm Rewards Withdrawal transaction for {selectedFarmPool?.name}
               </h1>
+              <p className="text_grey text-sm">
+                Withdrawing {selectedFarmPool?.accruedRewardTotal} BOND/USDT LP
+              </p>
               {connectionError && (
                 <p className="text-red-500 break-words bg-dappHeaderBg border-border_pri border rounded-md text-sm py-3 px-10 mt-5">
                   {connectionError}

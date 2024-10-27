@@ -166,7 +166,7 @@ const FarmPage = () => {
                 farms[index].contractAddress
               );
   
-              let getUserInfo: string[] = [];
+              let getUserInfo: any = [];
               try {
                 getUserInfo = await readContractFnCall(
                   "get_user_info",
@@ -184,7 +184,12 @@ const FarmPage = () => {
                   farms[index].contractAddress,
                 ],
               });
-  
+
+              const bondSymbol =  await readContractFnCall(
+                "symbol",
+                [],
+                farms[index].shareId
+              );
               // Fetch the symbol for each reward address
               const rewardTokens = await Promise.all(
                 rewardAddresses?.map(
@@ -221,9 +226,10 @@ const FarmPage = () => {
 
 
               // console.log({[`farm-pool-${index}`]: farmInfo, farmAPR: farmAPR.toPrecision(7), rewardRatioSum})
-
+              console.log({[`farm-${index}`]: getUserInfo})
               return {
                 ...farmPool,
+                bondSymbol,
                 farmInfo,
                 rewardTokens,
                 getUserInfo,
@@ -231,7 +237,10 @@ const FarmPage = () => {
                 maturityTimeStamp: maturityDate,
                 expiration: dateFormat(maturityDate),
                 farmEnabled: BigInt(maturityDate) > now,
-                farmAPR: farmAPR.toFixed(2)
+                farmAPR: farmAPR.toFixed(2),
+                accruedRewardOne: getUserInfo.accrued_rewards1,
+                accruedRewardTwo: getUserInfo.accrued_rewards2,
+                accruedRewardTotal: floatFigure(Number(ethers.formatUnits(getUserInfo.accrued_rewards1 + getUserInfo.accrued_rewards2,7)),7)
               };
             } catch (error) {
               console.error(`Error processing pool ${index}:`, error);
@@ -240,7 +249,8 @@ const FarmPage = () => {
             }
           })
         );
-        setAllFarms(updatedFarm);
+        const sortedFarms = updatedFarm.sort((a, b) => b.bondBalance - a.bondBalance)
+        setAllFarms(sortedFarms);
       }
     };
   
@@ -293,23 +303,6 @@ const FarmPage = () => {
       return newToggleArr;
     });
   };
-
-  const sumAccruedRewards = (farm: any) => {
-    const accrued_rewards1 = farm?.getUserInfo.accrued_rewards1
-    const accrued_rewards2 = farm?.getUserInfo.accrued_rewards2
-
-    const sumRewards = accrued_rewards1 + accrued_rewards2
-
-    return floatFigure(
-      Number(
-        ethers.formatUnits(
-          sumRewards,
-          7
-        )
-      ),
-      7
-    )
-  }
   return (
     <>
       <div className="dapp h-screen">
@@ -370,7 +363,7 @@ const FarmPage = () => {
                           <h2 className="text-white md:text-sm text-md mb-1">
                             {farm.name} Available for farming
                           </h2>
-                          <div className="text-gray-400 text-lg max-md:text-xl brFirma_font mb-3 max-md:mt-3 max-md:mb-5">
+                          <div className="text-gray-400 text-lg max-md:text-xl brFirma_font mb-3 max-md:mt-3 max-md:mb-5 flex items-center">
                             <p>
                               <span className="text-white font-semibold">
                                 {farm?.bondBalance ? (
@@ -379,10 +372,11 @@ const FarmPage = () => {
                                   <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>
                                 )}
                               </span>
-                              <span className="text-blueish text-sm font-normal ml-2">
-                                Bonds
+                              <span className="text-blueish text-sm font-normal ml-2 uppercase">
+                                {farm?.bondSymbol}
                               </span>
                             </p>
+                            <p className="text-sm ml-1 mt-1">bonds</p>
                           </div>
                           <Link href={"/app"} target="_blank">
                           <h2 className="text-blueish text-sm ">Get More</h2>
@@ -515,7 +509,7 @@ const FarmPage = () => {
 
                       <div className="get_LP_tokens flex items-center gap-3 max-md:w-full py-3 justify-between max-md:my-7 max-md:pt-7 ">
                         <div className="flex flex-wrap items-center justify-between gap-10 ">
-                          <div className="APY text-blueish  w-5/12 brFirma_font">
+                          <div className="APY text-blueish  w-5/12 brFirma_font flex items-center">
                             <p>
                               <span className="text-blueish text-sm font-normal mr-2">
                                 Deposited
@@ -528,10 +522,11 @@ const FarmPage = () => {
                                   )
                                 )}
                               </span>
-                              <span className="text-blueish text-sm font-normal ml-2">
-                                BONDS
+                              <span className="text-blueish text-sm font-normal ml-2 uppercase">
+                                {farm?.bondSymbol}
                               </span>
                             </p>
+                            <p className="text-sm ml-1 text-gray-400 ">bonds</p>
                             {/* <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px] my-1">
                               <Image
                                 src={ApyArrowIcon}
@@ -614,7 +609,7 @@ const FarmPage = () => {
                               {floatFigure(
                                 Number(
                                   ethers.formatUnits(
-                                    farm?.getUserInfo.accrued_rewards1,
+                                    farm?.accruedRewardOne,
                                     7
                                   )
                                 ),
@@ -630,7 +625,7 @@ const FarmPage = () => {
                               {floatFigure(
                                 Number(
                                   ethers.formatUnits(
-                                    farm?.getUserInfo.accrued_rewards2,
+                                    farm?.accruedRewardTwo,
                                     7
                                   )
                                 ),
@@ -642,10 +637,10 @@ const FarmPage = () => {
                           {/* ACCRUED ONE & TWO */}
                           <div className="usdtProvided flex justify-between text-gray-400 text-md ">
                             <h2 className="text-md mb-2 max-sm:text-sm">
-                              Accrued Rewards (USDT)
+                              Accrued Rewards Total ({farm?.rewardTokens[0]?.symbol})
                             </h2>
                             <p className="text-md max-sm:text-sm mb-2 ">
-                              {sumAccruedRewards(farm)}
+                              {farm?.accruedRewardTotal}
                             </p>
                           </div>
                         </div>

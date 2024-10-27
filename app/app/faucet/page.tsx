@@ -128,10 +128,10 @@ const Faucet = () => {
       <div className="dapp">
         <DAppHeader />
         <div className="lg:w-11/12 md:max-lg:w-11/12 mx-auto md:pt-24 pt-8 md:px-5 max-w-[1500px] h-screen text-center">
-          <h1 className="text-[4vw] text-white uppercase">Faucets</h1>
-          <p className="text-white">Mint Tokens For Tests.</p>
+          <h1 className="text-[4vw] text-white uppercase">Faucet</h1>
+          <p className="text-white">Mint test USDC to try our dapp.</p>
           <button
-            className="product_button items-center px-20 py-5 my-5"
+            className="product_button items-center px-20 py-5 my-5  rounded-xl"
             onClick={signWithFreighter}
           >
             <p className="text-[13px] text-darkPrimText uppercase">

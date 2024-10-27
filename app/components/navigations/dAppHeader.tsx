@@ -51,7 +51,7 @@ import { pool } from "@/app/constants/poolOptions";
 import { formatFigures } from "../web3FiguresHelpers";
 import { TESTNET_DETAILS } from "@/app/helpers/network";
 import { usePathname } from "next/navigation";
-import { ChartBarIcon, CircleStackIcon, CurrencyEuroIcon } from "@heroicons/react/24/outline";
+import { BanknotesIcon, ChartBarIcon, CircleStackIcon, CurrencyEuroIcon } from "@heroicons/react/24/outline";
 
 export const kit: StellarWalletsKit = new StellarWalletsKit({
   network: WalletNetwork.TESTNET,
@@ -285,9 +285,9 @@ const [networkChange, setNetworkChange] = useState(false)
             </li>
             </Link>
             <Link href={"/app/farm"}>
-          <li className={`flex items-center gap-2 ${pathName === "/app/farm" ? "text-[#937ED6]" : "text-white"}`}>
+          <li className={`flex items-center gap-2 ${pathName === "/app/farm" && "text-[#937ED6]"}`}>
 
-          <CircleStackIcon className="w-[20px]"/>
+          <BanknotesIcon className="w-[20px]"/>
             <p>Farm</p>
           </li>
           </Link>

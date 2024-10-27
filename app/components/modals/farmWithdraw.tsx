@@ -160,6 +160,8 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
       setNotEnoughBal(false);
     }
   }, [depositAmount, bondBalance]);
+
+  
   return (
     <>
       <div
@@ -173,7 +175,7 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                   <h1 className="text-lg">
                     {selectedFarmPool?.name} - Withdraw LP tokens
                   </h1>
-                  <p className="text_grey text-sm">BOND/USDT</p>
+                  <p className="text_grey text-sm uppercase">{selectedFarmPool?.bondSymbol}/USDT</p>
                 </div>
                 <div
                   className="cursor-pointer"
@@ -190,7 +192,7 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
               </div>
 
               <div className="md:p-3 py-3">
-                <p className="text-white mb-3 text-sm">Bond Amount</p>
+                <p className="text-white mb-3 text-sm">Amount</p>
                 {notEnoughBal && (
                   <p className="text-red-500 text-sm mb-2">
                     Not Enough Bond, Get More
@@ -260,13 +262,12 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                       {floatFigure(
                         Number(
                           ethers.formatUnits(
-                            selectedFarmPool?.getUserInfo.accrued_rewards1,
+                            selectedFarmPool?.accruedRewardOne,
                             7
                           )
                         ),
                         7
-                      )}{" "}
-                      Bonds
+                      )}
                     </p>
                   </div>
                 </div>
@@ -279,13 +280,22 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                       {floatFigure(
                         Number(
                           ethers.formatUnits(
-                            selectedFarmPool?.getUserInfo.accrued_rewards2,
+                            selectedFarmPool?.accruedRewardTwo,
                             7
                           )
                         ),
                         7
-                      )}{" "}
-                      Bonds
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="">
+                  <div className=" flex items-center justify-between mb-3">
+                    <p className="text_grey text-md max-sm:text-sm">
+                      Accrued Rewards Total ({selectedFarmPool?.rewardTokens[0]?.symbol})
+                    </p>
+                    <p className="text-white text-md max-sm:text-sm">
+                      {selectedFarmPool?.accruedRewardTotal}
                     </p>
                   </div>
                 </div>
@@ -321,13 +331,13 @@ const FarmWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
                   />
                 </div>
               </div>
-              {/* <SpinningLoading/> */}
+              <SpinningLoading/>
               <h1 className="text-2xl px-16 mb-7">
                 Confirm Withdrawal transaction in your wallet for{" "}
                 {selectedFarmPool?.name}
               </h1>
               <p className="text_grey text-sm">
-                Farm {depositAmount} BOND/USDT LP
+                Farm {depositAmount} {selectedFarmPool?.bondSymbol}/USDT LP
               </p>
               {connectionError && (
                 <p className="text-red-500 break-words bg-dappHeaderBg border-border_pri border rounded-md text-sm py-3 px-10 mt-5">
