@@ -72,7 +72,7 @@ const MainDapp = () => {
     return ethers.formatUnits(result, 7);
   }; 
 
-  const connectorAddr = connectorWalletAddress ? connectorWalletAddress : "GB3FAF7IKMH4KMZGL35RMN4ZJK7VLAXOQHK44DWX6VGVOLLUGMPIDMT5"
+  const connectorAddr = connectorWalletAddress ? connectorWalletAddress : "GBE3GK4YPHHD6P45GSM46C6YBKWM5GLAVOEEGKUXSAZIA7W3KS4RCDSC"
   const getPoolReserve = async (poolIndex: number) => {
     const txBuilderBalance = await getTxBuilder(
       connectorAddr,
@@ -227,7 +227,7 @@ const MainDapp = () => {
               return valueB - valueA;
             }
           });
-          console.log({ sortedPools });
+          // console.log({ sortedPools });
           return sortedPools; // Return the sortedPools array directly, not wrapped in an object
         });
         
@@ -237,7 +237,7 @@ const MainDapp = () => {
   useEffect(() => {
     const getNetwork = async () => {
       const networkDetails = await getNetworkDetails()
-      console.log({networkDetails})
+      // console.log({networkDetails})
       if(networkDetails.network == "PUBLIC"){
         setIsTestnet(false)
       } else if(networkDetails.network == "TESTNET"){
@@ -245,7 +245,7 @@ const MainDapp = () => {
       } else{
         setIsTestnet(null)
       }
-      console.log({networkDetails: networkDetails.network})
+      // console.log({networkDetails: networkDetails.network})
     }
     getNetwork()
   }, [])

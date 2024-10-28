@@ -91,7 +91,7 @@ export default function Home() {
   };
 
   const [pools, setPools] = useState(pool);
-  console.log({ pools, selectedNetwork });
+  // console.log({ pools, selectedNetwork });
 
   useEffect(() => {
     const fetchData = async () => {

@@ -114,7 +114,6 @@ export const simulateTx = async <ArgType>(
   server: SorobanRpc.Server,
 ): Promise<ArgType> => {
   const response = await server.simulateTransaction(tx);
-  console.log({response})
   if (
     SorobanRpc.Api.isSimulationSuccess(response) &&
     response.result !== undefined
@@ -404,7 +403,6 @@ export const mintTestTokens = async ({
   const contract = new Contract(tokenId);
 
 
-  console.log({tokenId, quantity, destinationPubKey, contract})
 
   try {
     const tx = txBuilderAdmin

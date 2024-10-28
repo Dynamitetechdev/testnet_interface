@@ -148,7 +148,6 @@ const FarmDeposit: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
   // const getFarmAPR = () => {
     
   // }
-console.log()
   useEffect(() => {
     if(Number(depositAmount) > Number(bondBalance)){
       setNotEnoughBal(true)

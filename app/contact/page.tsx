@@ -39,7 +39,7 @@ const Contact = () => {
       )
       .then(
         (result: any) => {
-          console.log(result.text);
+          // console.log(result.text);
 
           setIsPending(false);
         },

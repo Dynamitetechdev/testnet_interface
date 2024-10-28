@@ -153,7 +153,6 @@ const RewardsWithdraw: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     setStep(1);
     // }
   };
-  console.log();
   useEffect(() => {
     if (Number(depositAmount) > Number(bondBalance)) {
       setNotEnoughBal(true);

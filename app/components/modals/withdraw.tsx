@@ -145,15 +145,11 @@ const WithdrawFunds: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     setWihdrawalEnabled(
       functName === "available_redemption" && Number(result) > 0 ? true : false
     );
-    console.log({functName: result})
-    // console.log({[functName]: result});
     return result;
   };
-  // console.log({withdrawalEnabled})
   useEffect(() => {
     readContract("available_redemption");
   });
-  // console.log({maturity})
   useEffect(() => {
     if (signedXdr) {
       submit();
@@ -251,7 +247,7 @@ const calculateAggregateAPY = (deposits: any[]) => {
 
 const aggregateAPY = calculateAggregateAPY(depositsForAwallet);
 
-console.log('Aggregate APY:', aggregateAPY);
+// console.log('Aggregate APY:', aggregateAPY);
 
   return (
     <>

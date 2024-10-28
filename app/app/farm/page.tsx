@@ -80,14 +80,14 @@ const FarmPage = () => {
   const [openFarmModal, setOpenFarmModal] = useState(false);
   const [openFarmWithdrawModal, setOpenFarmWithdrawModal] = useState(false);
   const [openWithdrawRewardModal, setOpenWithdrawRewardModal] = useState(false);
-
+  const nullAddr = connectorWalletAddress ? connectorWalletAddress : "GBE3GK4YPHHD6P45GSM46C6YBKWM5GLAVOEEGKUXSAZIA7W3KS4RCDSC"
   const readContractFnCall = async (
     functName: string,
     args: any[] = [],
     contractAddr: string
   ) => {
     const txBuilder = await getTxBuilder(
-      connectorWalletAddress!,
+      nullAddr,
       BASE_FEE,
       provider,
       selectedNetwork.networkPassphrase
@@ -97,11 +97,11 @@ const FarmPage = () => {
       contractAddr,
       txBuilder,
       provider,
-      connectorWalletAddress,
+      nullAddr,
       functName,
       args
     );
-    console.log({ [functName]: result });
+    // console.log({ [functName]: result });
     return result;
   };
   const getShareCont = async (
@@ -178,20 +178,20 @@ const FarmPage = () => {
                 // Optionally log the error or handle specific cases here
               }
   
-              console.log({
-                [`Farm timestamp - ${index}`]: [
-                  maturityDate,
-                  farms[index].contractAddress,
-                ],
-              });
+              // console.log({
+              //   [`Farm timestamp - ${index}`]: [
+              //     maturityDate,
+              //     farms[index].contractAddress,
+              //   ],
+              // });
 
-              const bondSymbol =  await readContractFnCall(
+              const bondSymbol = connectorWalletAddress &&   await readContractFnCall(
                 "symbol",
                 [],
                 farms[index].shareId
               );
               // Fetch the symbol for each reward address
-              const rewardTokens = await Promise.all(
+              const rewardTokens = connectorWalletAddress &&  await Promise.all(
                 rewardAddresses?.map(
                   async (address: string, addrIndex: number) => {
                     const symbol = await readContractFnCall(
@@ -226,21 +226,22 @@ const FarmPage = () => {
 
 
               // console.log({[`farm-pool-${index}`]: farmInfo, farmAPR: farmAPR.toPrecision(7), rewardRatioSum})
-              console.log({[`farm-${index}`]: getUserInfo})
               return {
                 ...farmPool,
                 bondSymbol,
                 farmInfo,
-                rewardTokens,
-                getUserInfo,
-                bondBalance: shareBalance,
+                rewardTokens: rewardTokens ? rewardTokens : [],
+                getUserInfo: getUserInfo ? getUserInfo : null,
+                bondBalance: shareBalance ? shareBalance : 0,
                 maturityTimeStamp: maturityDate,
                 expiration: dateFormat(maturityDate),
                 farmEnabled: BigInt(maturityDate) > now,
                 farmAPR: farmAPR.toFixed(2),
-                accruedRewardOne: getUserInfo.accrued_rewards1,
+                accruedRewardOne: getUserInfo.accrued_rewards1 ,
                 accruedRewardTwo: getUserInfo.accrued_rewards2,
-                accruedRewardTotal: floatFigure(Number(ethers.formatUnits(getUserInfo.accrued_rewards1 + getUserInfo.accrued_rewards2,7)),7)
+                accruedRewardTotal: getUserInfo && getUserInfo?.accrued_rewards1
+                ? floatFigure(Number(ethers.formatUnits(getUserInfo.accrued_rewards1 + getUserInfo.accrued_rewards2, 7)), 7) 
+                : 0
               };
             } catch (error) {
               console.error(`Error processing pool ${index}:`, error);
@@ -251,15 +252,16 @@ const FarmPage = () => {
         );
         const sortedFarms = updatedFarm.sort((a, b) => b.bondBalance - a.bondBalance)
         setAllFarms(sortedFarms);
+  // console.log({[`farm-`]: updatedFarm[0]})
+
       }
     };
   
-    if (connectorWalletAddress) {
+    if (nullAddr) {
       updatedFarms();
     }
-  }, [connectorWalletAddress, transactionsStatus?.deposit, transactionsStatus]);
+  }, [connectorWalletAddress,transactionsStatus?.deposit, transactionsStatus, nullAddr]);
   
-
   const handleFarmDeposit = (farm: any) => {
     setOpenFarmModal(true);
     setSelectedFarmPool(farm);
@@ -275,7 +277,6 @@ const FarmPage = () => {
     setSelectedFarmPool(farm);
   };
 
-  console.log({ allFarms });
   const userPositions = () => {
     const depositedFarm = allFarms.filter(
       (farm: any) => farm?.getUserInfo?.deposited > 0
@@ -285,7 +286,7 @@ const FarmPage = () => {
         Number(b.getUserInfo?.deposited) - Number(a.getUserInfo?.deposited)
     );
     setUserFarmPositions(sortedPositions);
-    console.log({ sortedPositions });
+    // console.log({ sortedPositions });
   };
 
   useEffect(() => {
@@ -457,7 +458,8 @@ const FarmPage = () => {
                         </button>
                       ) : (
                         <Link href={"/app"} target="_blank">
-                          <button className="button2 px-5 py-1 text-[12px] max-md:hidden">
+                          <button className="button2 px-5 py-1 text-[12px] max-md:hidden"
+                                              disabled={!connectorWalletAddress}>
                             Get LP tokens
                           </button>
                         </Link>
@@ -578,6 +580,7 @@ const FarmPage = () => {
                           <button
                             className="button1 px-10 py-2 text-[12px] max-md:w-full max-md:py-4"
                             onClick={() => handleFarmWithdraw(farm)}
+                            disabled={!connectorWalletAddress}
                           >
                             Remove From Farm
                           </button>
@@ -585,6 +588,7 @@ const FarmPage = () => {
                           <button
                             className="button1 px-10 py-2 text-[12px] max-md:w-full max-md:py-4 ml-2"
                             onClick={() => handleWithdrawRewards(farm)}
+                            disabled={!connectorWalletAddress}
                           >
                             Withdraw Rewards Only
                           </button>

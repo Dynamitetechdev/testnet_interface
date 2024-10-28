@@ -185,7 +185,7 @@ const DepositFunds: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     setQuoteProcessAlert(Number(quote) > 0  ? "Quote successful." : 'No Quote, Requesting Quote.')
     setRawQuote(quoteFromSC)
     setQuoteFromSC(quote)
-    console.log({quoteFromSC: quote})
+    // console.log({quoteFromSC: quote})
     return quote
   }
 
@@ -272,7 +272,7 @@ const DepositFunds: React.FC<{ setOpenState: any }> = ({ setOpenState }) => {
     // }
   // }, [quoteStatus,quoteActivated, quoteActivationLoading, step])
   }, [])
-  console.log({initialQuote, quoteFromSc})
+  // console.log({initialQuote, quoteFromSc})
 
   const maxDeposit = () => {
     setDepositAmount(userBalance)

@@ -80,25 +80,19 @@ const DAppHeader = () => {
     null as string | null
   );
 
-  const connectWallet = async () => {
-    const isAllowed = await setAllowed();
-    if (isAllowed) {
-      alert("Successfully added the app to Freighter's Allow List");
-    }
-    return isConnected;
-  };
-
   const retrievePublicKey = async () => {
     // if (!(await isAllowed())) {
     //   await connectWallet();
     // }
+    const isAll = await isAllowed()
+    const isReq = await requestAccess()
     const checkIsConnected = await isConnected();
     const previouslyAuthorized = await isAllowed();
 
     try {
       if (checkIsConnected && previouslyAuthorized && !connectorWalletAddress) {
         let publicKey = await requestAccess();
-        console.log({connectorWalletAddress: publicKey})
+        // console.log({connectorWalletAddress: publicKey})
         setConnectorWalletAddress(publicKey);
       }
     } catch (e) {
@@ -125,13 +119,32 @@ const DAppHeader = () => {
           }
         },
       });
+
+
+    }
+  };
+  const [hasAccess, setChecAccess] = useState(false)
+  const accessing = async () => {
+
+    try {
+      const isCon = await isConnected()
+      const isAll = await isAllowed()
+      const isReq = await requestAccess()
+      setChecAccess(isAll)
+      // console.log({isCon,isAll ,
+      //   isReq})
+    } catch (e) {
+      console.log({ e });
     }
   };
 
   const disconnectWallet = async () => {
-    setConnectorWalletAddress(null); 
-    setUserBalance(null);
-    // alert("Wallet disconnected successfully");
+    try {
+      setConnectorWalletAddress(null);
+      setUserBalance(null);
+    } catch (error) {
+      console.error("Error disconnecting wallet:", error);
+    }
   };
   
   const server = getServer(selectedNetwork);
@@ -191,9 +204,10 @@ const DAppHeader = () => {
     }
   }, [connectorWalletAddress,transactionsStatus]);
 
-  useEffect(() => {
-    retrievePublicKey()
-  }, [connectorWalletAddress])
+  // useEffect(() => {
+  //   // accessing()
+  //   retrievePublicKey()
+  // }, [connectorWalletAddress])
   const inferredNetwork = async () => {
     if (await isConnected() || connectorWalletAddress) {
       const networkPassphrase = await getNetwork();
@@ -210,7 +224,6 @@ const [networkChange, setNetworkChange] = useState(false)
   useEffect(() => {
     inferredNetwork();
     setNetworkChange(false)
-    console.log("Changing network", selectedNetwork.network, networkChange)
   }, [connectorWalletAddress, transactionsStatus, isConnected, isAllowed, getNetwork, networkChange]);
 
   useEffect(() => {
@@ -225,7 +238,6 @@ const [networkChange, setNetworkChange] = useState(false)
         inferredNetwork();
       }
 
-      console.log({networkDetails: networkDetails.network})
     }
     getNetwork()
   }, [])
@@ -233,7 +245,6 @@ const [networkChange, setNetworkChange] = useState(false)
   useEffect(() => {
     inferredNetwork();
   }, [networkChange]);
-  console.log({networkk: selectedNetwork.network})
 
   const pathName = usePathname()
   return (
