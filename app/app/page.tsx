@@ -137,7 +137,8 @@ const MainDapp = () => {
           apy: poolApy?.averageYieldPostExecution?.upper || "expired",
         };
       });
-  
+
+      console.log({extractedApys})
       setApys(extractedApys);
       setLoadingApy(false);
     }
@@ -547,7 +548,7 @@ const MainDapp = () => {
                         }`}
                       >
                         {" "}
-                        {!pool.expiration || loadingApy ? (
+                        {!pool.expiration || loadingApy || Number(pool?.apy) == 0 ?(
                           <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>
                         ) : (
                           pool?.apy
@@ -637,7 +638,7 @@ const MainDapp = () => {
             <div className="table_pool_container max-lg:hidden">
               {expiredPools.map((pool: any, index: number) => (
                 <div
-                  className={`table_pool flex items-start px-4 border-border_pri pb-3 pt-6 ${
+                  className={`table_pool flex items-center px-4 border-border_pri pb-3 pt-6 ${
                     index !== 0 && "border-t"
                   }`}
                   key={`${index}--pool`}
@@ -669,26 +670,12 @@ const MainDapp = () => {
                         }`}
                       >
                         {" "}
-                        {!pool.expiration || loadingApy ? (
+                        {!pool.expiration || loadingApy || Number(pool?.apy) == 0.00 ? (
                           <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div>
                         ) : (
                           pool?.apy
                         )}
                       </h1>
-                    {/* <h1 className="text-[16px] mb-1 ">10.90 (testing)</h1> */}
-                    <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px]">
-                      {" "}
-                      <Image
-                        src={ApyArrowIcon}
-                        width={14}
-                        height={14}
-                        alt="right"
-                        className=""
-                      />{" "}
-                      <p className="text-[13px] text-[#A586FE]">
-                        2.1% vs. last month
-                      </p>
-                    </div>
                   </div>
                   <div className="Deposit_asset text-blueish w-3/12 flex items-center">
                     <div className="asset_logo ">
@@ -781,7 +768,7 @@ const MainDapp = () => {
                     </div>
                     <div className="APY text-blueish  ">
                       <h1 className="text-[16px] mb-1 ">
-                      {loadingApy ? <div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div> : pool.apy}
+                      {!pool.expiration || loadingApy || Number(pool?.apy) == 0 ?<div className="w-[60px] skeleton py-3 animate-puls shadow-md"></div> : pool.apy}
                         </h1>
                       {/* <div className="time_tag flex items-center gap-1 py-[3px] px-[5px] w-[150px]">
                         {" "}
